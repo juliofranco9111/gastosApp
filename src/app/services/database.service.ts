@@ -17,8 +17,12 @@ export class DatabaseService {
     return itemRef;
   }
 
+  getInfo() {
+    return this.dB.object('usuarios/usuarioejemplo/info').valueChanges()
+  }
+
   getMovements() {
-    return this.dB.object(`usuarios/movimientos/01`).valueChanges();
+    return this.dB.list(`usuarios/usuarioejemplo/movimientos`).valueChanges();
   }
   
   saveMovement(id: string, data) {

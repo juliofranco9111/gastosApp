@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { HomeComponent } from './components/home/home.component';
 import { MovementsComponent } from './components/movements/movements.component';
 import { NewMovementComponent } from './components/new-movement/new-movement.component';
+import { LoadingComponent } from './components/shared/loading/loading.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { NewMovementComponent } from './components/new-movement/new-movement.com
     NavbarComponent,
     HomeComponent,
     MovementsComponent,
-    NewMovementComponent
+    NewMovementComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

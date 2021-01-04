@@ -39,6 +39,8 @@ export class InfoComponent implements OnInit, OnDestroy {
       // console.log(info);
       if (info) {
         this.info = info;
+      } else {
+        console.log('no hay info');
       }
     })
 
@@ -80,7 +82,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   }
 
   getInfo() {
-    return this.dB.getMovements();
+    return this.dB.getInfo();
   }
 
 }

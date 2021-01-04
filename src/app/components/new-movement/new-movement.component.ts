@@ -2,6 +2,7 @@ import { DatabaseService } from './../../services/database.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-movement',
@@ -13,7 +14,8 @@ export class NewMovementComponent implements OnInit, OnDestroy {
   public newMovement = this.fb.group({
     type: ['',Validators.required],
     amount:[ , Validators.required],
-    category: ['', Validators.required]
+    category: ['', Validators.required],
+    id: ['0', Validators.required]
   })
 
   public categories: any[] = [];
@@ -21,7 +23,8 @@ export class NewMovementComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private dB: DatabaseService
+    private dB: DatabaseService,
+    private router: Router
   ) { }
   ngOnDestroy(): void {
     this.categorySubscribe.unsubscribe();
@@ -40,31 +43,32 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveNewMovement() {    
+  saveNewMovement() {   
 
     const date = new Date;
     const id = date.getTime().toString();
 
     const data = this.newMovement.value;
     const category:string = this.newMovement.value.category;
-    console.log(id);
-    console.log(data);
-
-    // console.log(this.newMovement.value.category);
-    console.log(this.categories);
-    console.log(category);
-
+    
     if (!this.categories.includes(category) ) {
       console.log('no existe');
       this.dB.saveCategory(this.newMovement.value.category);
-    } 
+    }
 
+    data.id = id;
+    
     this.dB.saveMovement(id, data)
       .then(() => {
         console.log('guardado!');
+        this.router.navigateByUrl('/movements')
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err));  
     
+  }
+
+  cancel() {
+    this.router.navigateByUrl('/movements');
   }
 
   
