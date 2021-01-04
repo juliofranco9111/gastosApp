@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+body{
+    background-color:#e9ecef;
+    min-height: 100vh;
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+.logo{
+    font-size: 30px;
+}

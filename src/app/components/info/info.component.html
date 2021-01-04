@@ -1,0 +1,88 @@
+<div *ngIf="saved" 
+                    class="alert alert-success animated fadeIn"> 
+                        <i class="fa fa-check"></i> Se ha guardado exitosamente tu información
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                    </div>
+
+<div class="row mt-2 animated fadeIn">
+    <div class="col-12">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="card-title">
+                    <span class="fa fa-user-o"></span>
+                    Cargá tu información Personal
+                </h3>
+                <table style="clear: both" class="table table-bordered table-striped" id="user">
+                    <tbody>
+                        <tr>
+                            <td>Simbolo de moneda preferido</td>
+                            <td>
+                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
+                                    style="color: rgb(152, 166, 173);">
+                                    {{ info.symbol }}
+                                </a>
+
+                                <input class="form-control" *ngIf="edit" [(ngModel)]="info.symbol"
+                                    (keyup.enter)="saveChanges()" type="text" name="symbol" id="">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>¿Cuanto cobras?</td>
+                            <td>
+                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
+                                    style="color: rgb(152, 166, 173);">
+                                    {{ info.salary }}
+                                </a>
+
+                                <input class="form-control" *ngIf="edit" [(ngModel)]="info.salary"
+                                    (keyup.enter)="saveChanges()" type="number" name="monto" id="">
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td> ¿Ahorrás?</td>
+
+                            <td>
+                                <div class="checkbox checkbox-success">
+                                    <input [(ngModel)]="info.saving" id="checkbox1" type="checkbox">
+                                    <label for="checkbox1"></label>
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                ¿Qué dia cobrás?
+                            </td>
+                            <td>
+                                <div class="col-8 mx-auto">
+                                    <select class="custom-select col-12" [(ngModel)]="info.day"
+                                        id="inlineFormCustomSelect">
+                                        <option selected="">Escoge uno...</option>
+                                        <option *ngFor="let day of dayMonth" value="{{day}}">{{day}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <div class="col-6 mx-auto">
+
+                    
+
+                    <button (click)="saveInfo()" type="button" class="btn btn-primary btn-block">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

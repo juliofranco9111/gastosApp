@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "gastos-app-d4c8f": {
+      "hosting": {
+        "gastos": [
+          "gastos-app-d4c8f"
+        ]
+      }
+    }
+  }
+}
