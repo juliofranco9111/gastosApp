@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DatabaseService } from './../../services/database.service';
 
 @Component({
@@ -6,9 +7,11 @@ import { DatabaseService } from './../../services/database.service';
   templateUrl: './info.component.html',
   styleUrls: []
 })
-export class InfoComponent implements OnInit {
+export class InfoComponent implements OnInit, OnDestroy {
 
   public edit = false;
+
+  public subs: Subscription;
 
   public saved = false;
 
@@ -21,19 +24,24 @@ export class InfoComponent implements OnInit {
     symbol: '$'
   };
 
-  constructor(private database: DatabaseService) {
+  constructor(private dB: DatabaseService) {
 
-    if (localStorage.getItem('info')) {
-      this.info = JSON.parse(localStorage.getItem('info'));
-      console.log(this.info);
-    } else {
-      console.log(this.info);
-    }
-    
+
+
+  }
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   ngOnInit(): void {
     this.daysMonth();
+    this.subs = this.getInfo().subscribe((info: any) => {
+      // console.log(info);
+      if (info) {
+        this.info = info;
+      }
+    })
+
   }
 
   click() {
@@ -45,24 +53,34 @@ export class InfoComponent implements OnInit {
   }
 
   daysMonth() {
-    
-    for (let i = 1; i <= 31; i++){
+
+    for (let i = 1; i <= 31; i++) {
       this.dayMonth.push(i)
     }
 
   }
 
   saveInfo() {
-    if ( this.info.salary !== 0 ) {
-      localStorage.setItem('info', JSON.stringify(this.info));
-      this.saved = true;
+    if (this.info.salary !== 0) {
+
+      this.dB.saveInfo(this.info)
+        .then(() => {
+          console.log('guardado!');
+          this.saved = true;
+        })
+        .catch(err => console.log(err));
       setTimeout(() => {
         this.saved = false;
       }, 5000);
+
     } else {
-      localStorage.removeItem('info')
       return
     }
+
+  }
+
+  getInfo() {
+    return this.dB.getMovements();
   }
 
 }

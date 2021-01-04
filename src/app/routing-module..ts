@@ -1,3 +1,4 @@
+import { NewMovementComponent } from './components/new-movement/new-movement.component';
 import { MovementsComponent } from './components/movements/movements.component';
 import { InfoComponent } from './components/info/info.component';
 import { NgModule } from '@angular/core';
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'info', component: InfoComponent },
   { path: 'movements', component: MovementsComponent },
+  { path: 'new', component: NewMovementComponent },
   { path: '**', component: HomeComponent }  
 ];
 

@@ -409,7 +409,7 @@ Stylish tooltip
 
 a.mytooltip {
   font-weight: 500;
-  color: #398bf7; }
+   }
 
 .tooltip-effect-7 .tooltip-content2 {
   -webkit-transform: translate3d(0, 10px, 0);

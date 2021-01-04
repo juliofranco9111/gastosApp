@@ -10,6 +10,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { HomeComponent } from './components/home/home.component';
 import { MovementsComponent } from './components/movements/movements.component';
+import { NewMovementComponent } from './components/new-movement/new-movement.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MovementsComponent } from './components/movements/movements.component';
     InfoComponent,
     NavbarComponent,
     HomeComponent,
-    MovementsComponent
+    MovementsComponent,
+    NewMovementComponent
   ],
   imports: [
     BrowserModule,

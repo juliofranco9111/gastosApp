@@ -1,0 +1,74 @@
+<div class="container">
+    <div class="card mt-0">
+        <div class="card-body">
+            <div class="d-flex">
+                <span class="lstick"></span>
+                <h1 class="card-title mx-auto">Nuevo movimiento</h1>
+            </div>
+    
+    
+            <form [formGroup]="newMovement"
+            (ngSubmit)="saveNewMovement()"
+            class ="floating-labels m-t-40">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group m-b-40">
+                            <select formControlName="type" 
+                            class="form-control p-0" id="input68">
+                                <option></option>
+                                <option value="ingreso">Ingreso</option>
+                                <option value="gasto">Gasto</option>
+                            </select><span class="bar"></span>
+                            <label for="input6">Tipo de movimiento</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group m-b-40">
+                            <input formControlName="amount"
+                            type="number" class="form-control" id="input12">
+                            <span class="bar"></span>
+                            <label for="input8">Monto</label>
+                        </div> 
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group m-b-40">
+                            <select formControlName="category"
+                            class="form-control p-0" id="input6">
+                                <option value=""></option>
+                                <option *ngFor="let category of categories"
+                                [value]="category">{{category}}</option>
+                              
+                            </select><span class="bar"></span>
+                            <label for="input9">Categoria</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group m-b-40">
+                            <input formControlName="category"
+                            type="text" class="form-control" id="input1">
+                            <span class="bar"></span>
+                            <label for="input1">Nueva categoría</label>
+                        </div> 
+                    </div>
+                </div>  
+                
+                <div class="row text-center">
+                    <div class="col-4"></div>
+                    <div class="col-2">
+                        <button type="submit"
+                        [disabled]="!newMovement.valid"
+                        class="btn btn-block btn-success text-white"><i class="fa fa-save"></i> Guardar </button>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-danger btn-block text-white"><i class="fa fa-times"></i> Cancelar </button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>

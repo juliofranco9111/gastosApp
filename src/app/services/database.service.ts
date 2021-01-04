@@ -8,10 +8,32 @@ import { AngularFireDatabase } from '@angular/fire/database';
 })
 export class DatabaseService {
 
-  constructor(private fireStore: AngularFireDatabase) {
+  constructor(private dB: AngularFireDatabase) {
 
-    console.log('fire base works');
-   }
+  }
+
+  saveInfo(info: any): any {
+    const itemRef = this.dB.object(`usuarios/usuarioejemplo/info`).set(info);
+    return itemRef;
+  }
+
+  getMovements() {
+    return this.dB.object(`usuarios/movimientos/01`).valueChanges();
+  }
   
+  saveMovement(id: string, data) {
+
+    return this.dB.object(`usuarios/usuarioejemplo/movimientos/${ id }`).set(data);
+  }
+
+  saveCategory(category: string) {
+    const itemRef = this.dB.list(`usuarios/usuarioejemplo/categorias`);
+    itemRef.push(category);
+  }
+
+  getCategories() {
+    return this.dB.object(`usuarios/usuarioejemplo/categorias`).valueChanges();
+  }
+
 
 }
