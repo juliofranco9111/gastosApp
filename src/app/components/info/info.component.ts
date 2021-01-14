@@ -1,6 +1,8 @@
+import { UserService } from 'src/app/services/user.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from './../../services/database.service';
+import { Movement } from 'src/app/models/movement.model';
 
 @Component({
   selector: 'app-info',
@@ -24,7 +26,18 @@ export class InfoComponent implements OnInit, OnDestroy {
     symbol: '$'
   };
 
-  constructor(private dB: DatabaseService) {
+  public uid = localStorage.getItem('uid')
+  public firstMovement: Movement = {
+    type: 'ingreso',
+    amount: 0,
+    category: 'Salario',
+    id: ''
+  };
+
+  constructor(
+    private dB: DatabaseService,
+    private userService: UserService
+  ) {
 
 
 
@@ -35,13 +48,11 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.daysMonth();
-    this.subs = this.getInfo().subscribe((info: any) => {
+    this.subs = this.getInfo( this.uid ).subscribe((info: any) => {
       // console.log(info);
       if (info) {
         this.info = info;
-      } else {
-        console.log('no hay info');
-      }
+      } 
     })
 
   }
@@ -65,15 +76,26 @@ export class InfoComponent implements OnInit, OnDestroy {
   saveInfo() {
     if (this.info.salary !== 0) {
 
-      this.dB.saveInfo(this.info)
+      const date = new Date;
+      const month = date.getMonth();
+
+      
+      
+      this.dB.saveInfo(this.uid, this.info)
         .then(() => {
-          console.log('guardado!');
+          //console.log('guardado!');
+          this.firstMovement.amount = this.info.salary;
+          this.firstMovement.id = month.toString()
+          
+          //console.log(this.firstMovement);
+          this.dB.saveMovement(this.uid, this.firstMovement.id, month, this.firstMovement);
           this.saved = true;
         })
         .catch(err => console.log(err));
       setTimeout(() => {
         this.saved = false;
-      }, 5000);
+      },
+        3000);
 
     } else {
       return
@@ -81,8 +103,9 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   }
 
-  getInfo() {
-    return this.dB.getInfo();
+  getInfo( uid:string ) {
+    
+    return this.dB.getInfo(uid);
   }
 
 }

@@ -12,3 +12,25 @@ body{
 .logo{
     font-size: 30px;
 }
+
+.icon-brand{
+    width: 150px;
+}
+
+.img-background{
+    background-image: url('assets/images/background/login-register.jpg');
+}
+
+
+
+.img-login-register{
+    width: 250px;
+    margin: 0px auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.dropdown-menu{
+    margin-left: -80px !important;
+    margin-top: 5px;
+}

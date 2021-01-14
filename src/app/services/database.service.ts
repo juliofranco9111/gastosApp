@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase } from '@angular/fire/database';
+import { Movement } from '../models/movement.model';
+import { User } from '../models/user.model';
+import { map } from 'rxjs/operators';
+
+
 
 
 @Injectable({
@@ -12,31 +17,50 @@ export class DatabaseService {
 
   }
 
-  saveInfo(info: any): any {
-    const itemRef = this.dB.object(`usuarios/usuarioejemplo/info`).set(info);
+  //Info money
+
+  saveInfo( uid:string ,info: any): any {
+    const itemRef = this.dB.object(`users/${ uid }/info`).set(info);
     return itemRef;
   }
 
-  getInfo() {
-    return this.dB.object('usuarios/usuarioejemplo/info').valueChanges()
+  getInfo( uid: string ) {
+    return this.dB.object(`users/${ uid }/info`).valueChanges()
   }
 
-  getMovements() {
-    return this.dB.list(`usuarios/usuarioejemplo/movimientos`).valueChanges();
+
+  //Movements
+
+  getMovements( uid:string, month: Number ) {
+    return this.dB.list(`users/${ uid }/movements/${month}`).valueChanges();
   }
   
-  saveMovement(id: string, data) {
+  saveMovement( uid:string, id: string, month:Number, data: Movement) {
 
-    return this.dB.object(`usuarios/usuarioejemplo/movimientos/${ id }`).set(data);
+    return this.dB.object(`users/${ uid }/movements/${ month }/${ id }`).set(data);
   }
 
-  saveCategory(category: string) {
-    const itemRef = this.dB.list(`usuarios/usuarioejemplo/categorias`);
+  //Categories
+
+  saveCategory(category: string, uid:string) {
+    const itemRef = this.dB.list(`users/${ uid }/categories`);
     itemRef.push(category);
   }
 
-  getCategories() {
-    return this.dB.object(`usuarios/usuarioejemplo/categorias`).valueChanges();
+  getCategories( uid:string ) {
+    return this.dB.object(`users/${ uid }/categories`).valueChanges();
+  }
+
+  // User
+
+  saveUser(user: User) {
+    this.dB.object(`users/${user.uid}/user`).set(user);
+    return this.returnUserById(user.uid);
+  }
+
+  returnUserById( uid: string ) {
+    return this.dB.object(`users/${uid}/user`).valueChanges()
+      .pipe(map((user:User) => user))
   }
 
 

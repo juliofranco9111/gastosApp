@@ -1,23 +1,25 @@
-import { NewMovementComponent } from './components/new-movement/new-movement.component';
-import { MovementsComponent } from './components/movements/movements.component';
-import { InfoComponent } from './components/info/info.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './components/home/home.component';
+import { PagesRoutingModule } from './pages/pages.routing.module';
+import { AuthRoutingModule } from './components/auth/auth.routing.module';
+
+import { ErrorComponent } from './pages/error/error.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'info', component: InfoComponent },
-  { path: 'movements', component: MovementsComponent },
-  { path: 'new', component: NewMovementComponent },
-  { path: '**', component: HomeComponent }  
+  
+  
+  { path: '', redirectTo: '/pages', pathMatch: 'full' },
+  { path: '**', component: ErrorComponent } 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes,{useHash: true}),
+    AuthRoutingModule,
+    PagesRoutingModule
+  ],
   exports: [RouterModule]
 })
 

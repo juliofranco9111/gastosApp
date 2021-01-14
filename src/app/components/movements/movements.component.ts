@@ -1,8 +1,11 @@
+import { Movement } from 'src/app/models/movement.model';
+import { UserService } from 'src/app/services/user.service';
+import { FormsModule } from '@angular/forms';
 import { InfoService } from './../../services/info.service';
 import { DatabaseService } from './../../services/database.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ThrowStmt } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-movements',
@@ -24,29 +27,54 @@ export class MovementsComponent implements OnInit, OnDestroy {
   public earnings = [];
   public expenses = [];
 
+  public newMovButton = true;
+
   public edit = false;
-  
+
+  public changedMonth = false;
+
+  public todayMonth: Number;
+
+  public months = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'];
+
+  public uid = localStorage.getItem('uid');
+
 
   constructor(
     private dB: DatabaseService,
+    private userService: UserService,
     private infoService: InfoService
   ) {
-    
-   }
+
+  }
 
   ngOnDestroy() {
     this.MovementsSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    this.MovementsSubscription = this.dB.getMovements().subscribe((movements: any) => {
+    const date = new Date;
+    this.todayMonth = date.getMonth();
+    this.MovementsSubscription = this.dB.getMovements(this.uid, this.todayMonth).subscribe((movements: any) => {
 
       if (!movements || movements.length === 0) {
         this.data = false;
         this.loading = false;
       } else {
         this.movements = movements;
-        
+
         this.getFilterMovements();
         this.totals();
         this.data = true;
@@ -62,15 +90,15 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   totals() {
-    
+
     this.earnings.forEach(mov => {
       this.totalEarnings += mov.amount;
     });
 
     this.expenses.forEach(mov => {
       this.totalExpenses += mov.amount;
-    });  
-    
+    });
+
     this.getBalance();
   }
 
@@ -82,12 +110,42 @@ export class MovementsComponent implements OnInit, OnDestroy {
     this.edit = true;
   }
 
-  updateMovement( movement ) {
+  updateMovement(movement: Movement) {
     console.log('updated');
 
     console.log(movement);
 
     this.edit = false;
+  }
+
+  changeMonth(value: Number) {
+    const date = new Date;
+    const currentMonth = date.getMonth()
+
+    if (value != currentMonth) {
+      this.newMovButton = false;
+    } else {
+      this.newMovButton = true;
+    }
+
+    this.MovementsSubscription.unsubscribe();
+
+    this.changedMonth = true;
+
+    this.MovementsSubscription = this.dB.getMovements(this.uid, value)
+      .subscribe((movements: Movement[]) => {
+        if (!movements || movements.length === 0) {
+          this.data = false;
+          this.changedMonth = false;
+
+        } else {
+          this.movements = movements;
+          this.changedMonth = false;
+          this.data = true;
+        }
+      }, err => {
+        console.log(err);
+      })
   }
 
 }
