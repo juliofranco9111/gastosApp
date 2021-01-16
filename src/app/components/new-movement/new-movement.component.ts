@@ -24,6 +24,11 @@ export class NewMovementComponent implements OnInit, OnDestroy {
 
   public categories: any[] = [];
 
+  public category2 = '';
+
+  public date = new Date;
+  public month = this.date.getMonth();
+
   public categorySubscribe: Subscription;
 
   constructor(
@@ -42,8 +47,6 @@ export class NewMovementComponent implements OnInit, OnDestroy {
       if (!res || res === null) {
         this.categories = [];
       } else {
-        // console.log(res);
-        //console.log(Object.values(res));
         this.categories = Object.values(res)
       }
     });
@@ -51,27 +54,38 @@ export class NewMovementComponent implements OnInit, OnDestroy {
 
   saveNewMovement() {
 
-    const date = new Date;
-    const id = date.getTime().toString();
-    const data: Movement = this.newMovement.value;
-    const category: string = this.newMovement.value.category;
+    const id = this.date.getTime().toString();
+    
+    const category = this.newMovement.controls['category'];
 
-    const month = date.getMonth();
+    console.log(category);
 
-    if (!this.categories.includes(category)) {
+    if (category.value === 'otra' || category.value.length === 0) {
+      console.log('holi');
       
-      this.dB.saveCategory(this.newMovement.value.category, this.uid);
+      category.setValue(this.category2)
+
+      console.log(category);
     }
 
-    data.id = id;
+    console.log(this.newMovement.value);
+    
+    if (!this.categories.includes(category.value)) {      
+      this.dB.saveCategory(category.value, this.uid);
+    }
 
-    this.dB.saveMovement(this.uid, id, month, data)
+    
+    const data: Movement = this.newMovement.value;
+    data.id = id;
+    data.month = this.month;
+
+    console.log(data);
+
+    this.dB.saveMovement(this.uid, id, this.month, data)
       .then(() => {
-        //console.log('guardado!');
         this.router.navigateByUrl('/movements')
       })
       .catch(err => console.log(err));
-
   }
 
   cancel() {

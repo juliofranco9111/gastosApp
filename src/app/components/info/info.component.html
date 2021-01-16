@@ -54,6 +54,22 @@
 
                         </tr>
 
+                        <tr *ngIf="info.saving">
+
+                            <td> ¿Cuánto querés ahorrar?</td>
+
+                            <td>
+                                <div class="col-8 mx-auto">
+                                    <select class="custom-select col-12" [(ngModel)]="info.percent" id="percent">
+                                        <option *ngFor="let item of percents" [value]="item">{{ item }}%</option>
+                                    </select>
+                                    <label for="checkbox1"></label>
+                                </div>
+
+                            </td>
+
+                        </tr>
+
                         <tr>
                             <td>
                                 ¿Qué dia cobrás?

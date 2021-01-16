@@ -25,7 +25,7 @@ import { InfoComponent } from './../components/info/info.component';
     InfoComponent,
     MovementsComponent,
     NewMovementComponent,
-    LoadingComponent
+    LoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +39,7 @@ import { InfoComponent } from './../components/info/info.component';
     InfoComponent,
     MovementsComponent,
     NewMovementComponent,
-    LoadingComponent
+    LoadingComponent,
   ]
 })
 export class PagesModule { }

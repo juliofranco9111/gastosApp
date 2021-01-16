@@ -1,14 +1,13 @@
 <app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
 <div class="container">
 
-    <div *ngIf="!loading" 
-    class="mx-auto animated fadeIn col-md-5 mb-1">
+    <div *ngIf="!loading" class="mx-auto animated fadeIn col-md-5 mb-1">
         <select (change)="changeMonth($event.target.value)" class="form-control btn-muted">
-           
-            <option *ngFor="let month of months; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}</option>
+
+            <option *ngFor="let month of months; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
+            </option>
         </select>
-        <div *ngIf="changedMonth"
-        class="container animated fadeIn mt-5">
+        <div *ngIf="changedMonth" class="container animated fadeIn mt-5">
             <app-loading></app-loading>
         </div>
     </div>
@@ -24,12 +23,11 @@
 
 
 
-<div *ngIf="!loading && data" class="row animated fadeIn">
-    <div class="mx-auto">
+<div *ngIf="!loading && data" class="row animated fadeIn col-">
+    <div class="mx-auto container-fluid">
 
-        <div *ngIf="!changedMonth"
-        class="card">
-            <div class="card-body">
+        <div *ngIf="!changedMonth" class="card">
+            <div class="card-body col-xs-12">
 
                 <table class="table">
                     <thead>
@@ -38,77 +36,63 @@
                             <th scope="col">Categoria</th>
                             <th scope="col">Ingresos</th>
                             <th scope="col">Gastos</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let movement of movements">
 
-
-                            <!-- <td>
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
-                                    {{ info.symbol }}
-                                </a>
-
-                                <input class="form-control" *ngIf="edit" [(ngModel)]="info.symbol"
-                                    (keyup.enter)="saveChanges()" type="text" name="symbol" id="">
-                            </td> -->
-
                             <td>
-                                <!-- <input class="form-control" (keyup.enter)="updateMovement()" type="text" [value]="movement.category"> -->
-
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
+                                <a style="color: rgb(152, 166, 173);">
                                     {{ movement.category }}
                                 </a>
-
-                                <input class="form-control" *ngIf="edit" [value]="movement.category"
-                                    (keyup.enter)="updateMovement( movement )" type="text" name="symbol" id="">
-
                             </td>
                             <td *ngIf="movement.type === 'gasto'"></td>
                             <td *ngIf="movement.type === 'ingreso'">
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
+                                <a *ngIf="!edit" style="color: rgb(152, 166, 173);">
                                     {{ infoService.symbol }} {{ movement.amount }}
                                 </a>
-
-                                <input class="form-control" *ngIf="edit" [value]="movement.amount"
-                                    (keyup.enter)="updateMovement( movement )" type="text" name="symbol" id="">
                             </td>
                             <td *ngIf="movement.type === 'ingreso'"></td>
                             <td *ngIf="movement.type === 'gasto'">
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
+                                <a style="color: rgb(152, 166, 173);">
                                     {{ infoService.symbol }} {{ movement.amount }}
                                 </a>
-
-                                <input class="form-control" *ngIf="edit" [value]="movement.amount"
-                                    (keyup.enter)="updateMovement( movement )" type="text" name="symbol" id="">
                             </td>
+
+                            <td>
+                                <div class="row">
+                                    <div class="col mb-3">
+
+                                        <button (click)="openModal(movement)" class="btn btn-secondary"
+                                            data-toggle="modal" data-target="#exampleModal">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col">
+
+                                        <button (click)="deleteMovement(movement)" class="btn btn-danger">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+
+
                         </tr>
 
 
 
                         <tr>
-
                             <th scope="col">Total</th>
                             <th scope="col"> {{ infoService.symbol }} {{ totalEarnings }}</th>
                             <th scope="col">{{ infoService.symbol }} {{ totalExpenses }}</th>
                         </tr>
 
 
-
                     </tbody>
                 </table>
-
-
-
-
-
             </div>
-
-
         </div>
     </div>
 </div>
@@ -122,14 +106,85 @@
 
 
 
-<div *ngIf="!loading && data && !changedMonth" class="card bg-success text-white mx-auto col-sm-4 animated fadeIn">
-    <div class="card-body">
-        <div class="d-block">
-            <div class="stats">
-                <h3 class="text-white text-center">Balance</h3>
-                <h1 class="mx-auto text-white text-center">{{ infoService.symbol }} {{ balance }}</h1>
-            </div>
+<!-- <div *ngIf="!loading && data && !changedMonth"
+    class="card bg-{{balanceClass}} text-white mx-auto col- animated fadeIn">
+    <div class="container">
 
+        <div class="card-body">
+            <div class="d-block">
+                <div class="stats">
+                    <h3 class="text-white text-center">Balance</h3>
+                    <h1 class="mx-auto text-white text-center">{{ infoService.symbol }} {{ balance }}</h1>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- Modal -->
+<div class="modal fade animated fadeIn" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar movimiento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editMovement" class="form-material m-t-40">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group m-b-40">
+                                <label for="input6">Tipo de movimiento</label>
+                                <select formControlName="type" class="form-control p-0" id="input68">
+                                    <option></option>
+                                    <option value="ingreso">Ingreso</option>
+                                    <option value="gasto">Gasto</option>
+                                </select><span class="bar"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group m-b-40">
+                                <label for="input8">Monto</label>
+                                <input formControlName="amount" type="number" class="form-control"
+                                    value="selectedMovement.amount" id="input12">
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group m-b-40">
+                                <label for="input9">Categoria</label>
+                                <select formControlName="category" class="form-control p-0" id="input6">
+                                    <option [selected]="selectedMovement.category" *ngFor="let category of categories"
+                                        [value]="category">{{category}}</option>
+                                    <option value="otra">Otra</option>
+                                </select>
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                        <div *ngIf="editMovement.value.category === 'otra'" class="col-md-6">
+                            <div class="form-group m-b-40">
+                                <label for="input1">Nueva categoría</label>
+                                <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}" type="text"
+                                    class="form-control" id="input1">
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" (click)="updateMovement()" data-dismiss="modal"
+                    class="btn btn-primary">Actualizar</button>
+            </div>
         </div>
     </div>
 </div>

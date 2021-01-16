@@ -4,6 +4,7 @@ export class Movement {
     public type: string,
     public amount: number,
     public category: string,
-    public id: string
+    public id: string,
+    public month: Number
   ) {}
 }

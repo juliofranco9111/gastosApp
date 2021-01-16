@@ -39,17 +39,18 @@
                             <label for="input9">Categoria</label>
                             <select formControlName="category"
                             class="form-control p-0" id="input6">
-                                <option value=""></option>
-                                <option *ngFor="let category of categories"
-                                [value]="category">{{category}}</option>
+                            <option *ngFor="let category of categories"
+                            [value]="category">{{category}}</option>
+                            <option value="otra"> Otra...</option>
                               
                             </select><span class="bar"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group m-b-40">
+                        <div *ngIf="newMovement.controls['category'].value === 'otra'"
+                        class="form-group m-b-40">
                             <label for="input1">Nueva categoría</label>
-                            <input formControlName="category"
+                            <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}"
                             type="text" class="form-control" id="input1">
                             <span class="bar"></span>
                         </div> 
@@ -59,8 +60,7 @@
                 <div class="row text-center">
                     <div class="col-4"></div>
                     <div class="col-2">
-                        <button type="submit"
-                        [disabled]="!newMovement.valid"
+                        <button type="submit" [disabled]="newMovement.invalid"
                         class="btn btn-block btn-success text-white"><i class="fa fa-save"></i> Guardar </button>
                     </div>
                     <div class="col-2">
