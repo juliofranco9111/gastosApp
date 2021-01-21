@@ -1,7 +1,7 @@
 <app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
-<div class="container">
+<div class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 mb-3 animated fadeIn">
 
-    <div *ngIf="!loading" class="mx-auto animated fadeIn col-md-5 mb-1">
+    <div *ngIf="!loading">
         <select (change)="changeMonth($event.target.value)" class="form-control btn-muted">
 
             <option *ngFor="let month of months; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
@@ -20,111 +20,116 @@
 </div>
 
 
+<div *ngIf="!loading && data" class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
 
+    <div>
+        <ul class="list-group">
+            <li *ngFor="let movement of movements" class="list-group-item">
+                <div *ngIf="movement.type === 'ingreso'" class="row p-1">
+                    <i class="fa fa-share text-success ml-1"></i>
 
+                    <div class="col-4 col-sm-4 col-md-4 text-center">
+                        <h5 class="text-secondary">
+                            {{ movement.category }}
+                        </h5>
+                    </div>
+                    <div class="col col-sm-3 col-md-4 text-right">
+                        <span class="text-muted" style="font-size: 10px;">{{symbol}}</span>
+                        <span style="font-size: 17px;">
+                            {{movement.amount}}
+                        </span>
+                    </div>
 
-<div *ngIf="!loading && data" class="row animated fadeIn col-">
-    <div class="mx-auto container-fluid">
+                    <div class="col col-sm-4 col-md-3 text-right" style="font-size: 20px;">
+                        <i class="fa fa-edit mr-3 cursor" (click)="openModal(movement)" data-toggle="modal" data-target="#exampleModal"></i>
+                        <i class="fa fa-trash cursor" (click)="deleteMovement(movement)"></i>
+                    </div>
 
-        <div *ngIf="!changedMonth" class="card">
-            <div class="card-body col-xs-12">
+                </div>
 
-                <table class="table">
-                    <thead>
-                        <tr>
+                <!-- ++++++++++++++++++++++++++++++++++++++++++++ -->
 
-                            <th scope="col">Categoria</th>
-                            <th scope="col">Ingresos</th>
-                            <th scope="col">Gastos</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let movement of movements">
+                <div *ngIf="movement.type === 'gasto'" class="row p-1">
+                    <i class="fa fa-reply text-danger ml-1"></i>
 
-                            <td>
-                                <a style="color: rgb(152, 166, 173);">
-                                    {{ movement.category }}
-                                </a>
-                            </td>
-                            <td *ngIf="movement.type === 'gasto'"></td>
-                            <td *ngIf="movement.type === 'ingreso'">
-                                <a *ngIf="!edit" style="color: rgb(152, 166, 173);">
-                                    {{ infoService.symbol }} {{ movement.amount }}
-                                </a>
-                            </td>
-                            <td *ngIf="movement.type === 'ingreso'"></td>
-                            <td *ngIf="movement.type === 'gasto'">
-                                <a style="color: rgb(152, 166, 173);">
-                                    {{ infoService.symbol }} {{ movement.amount }}
-                                </a>
-                            </td>
-
-                            <td>
-                                <div class="row">
-                                    <div class="col mb-3">
-
-                                        <button (click)="openModal(movement)" class="btn btn-secondary"
-                                            data-toggle="modal" data-target="#exampleModal">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col">
-
-                                        <button (click)="deleteMovement(movement)" class="btn btn-danger">
-                                            <i class="fa fa-trash-o"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-
-
-                        </tr>
-
-
-
-                        <tr>
-                            <th scope="col">Total</th>
-                            <th scope="col"> {{ infoService.symbol }} {{ totalEarnings }}</th>
-                            <th scope="col">{{ infoService.symbol }} {{ totalExpenses }}</th>
-                        </tr>
-
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    <div class="col-4 col-sm-4 col-md-4 text-center">
+                        <h5 class="text-secondary">
+                            {{ movement.category }}
+                        </h5>
+                    </div>
+                    <div class="col col-sm-3 col-md-4 text-right">
+                        <span class="text-muted" style="font-size: 13px;">{{symbol}}</span>
+                        <span style="font-size: 18px;">
+                            {{movement.amount}}
+                        </span>
+                    </div>
+                    <div class="col col-sm-4 col-md-3 text-right" style="font-size: 20px;">
+                        <i class="fa fa-edit mr-3 cursor" (click)="openModal(movement)" data-toggle="modal" data-target="#exampleModal"></i>
+                        <i class="fa fa-trash cursor" (click)="deleteMovement(movement)"></i>
+                    </div>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 
-<div *ngIf="!loading && newMovButton" class="text-center mb-4 animated fadeIn">
-    <a routerLink="/new" class="btn btn-primary text-white">
-        <i class="fa fa-plus"></i>
-        Nuevo movimiento
+
+<div *ngIf="!loading && newMovButton" class="text-center my-3 animated fadeIn">
+    <a routerLink="/new" class="text-secondary">
+        <span class="fa fa-plus-circle fa-4x mb-1 cursor"></span>
     </a>
 </div>
 
+<div class="row container mx-auto">
 
-
-<!-- <div *ngIf="!loading && data && !changedMonth"
-    class="card bg-{{balanceClass}} text-white mx-auto col- animated fadeIn">
-    <div class="container">
-
+    <div class="card col-12 col-sm-4 mx-auto my-3">
         <div class="card-body">
             <div class="d-block">
                 <div class="stats">
-                    <h3 class="text-white text-center">Balance</h3>
-                    <h1 class="mx-auto text-white text-center">{{ infoService.symbol }} {{ balance }}</h1>
+                    <h3 class="text-success text-center">Ingresos</h3>
+                    <h4 class="mx-auto text-center"><span>{{symbol}}</span> {{ totalEarnings }}
+                    </h4>
                 </div>
-                
+
             </div>
         </div>
     </div>
-</div> -->
+    <div class="card col-12 col-sm-4 mx-auto my-3">
+        <div class="card-body">
+            <div class="d-block">
+                <div class="stats">
+                    <h3 class="text-danger text-center">Gastos</h3>
+                    <h4 class="mx-auto text-center"><span>{{symbol}}</span> {{ totalExpenses }}
+                    </h4>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<div *ngIf="!loading && data && !changedMonth" class="card bg-{{balanceClass}} text-white col-12 col-sm-5 container mx-auto animated fadeIn">
+    <div>
+
+        <div class="card-body">
+            <h3 class="text-white text-center">Balance</h3>
+            <div class="d-block">
+                <div class="stats">
+                    <h1 class="mx-auto text-white text-center">{{ symbol }} {{ balance }}</h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal -->
-<div class="modal fade animated fadeIn" id="exampleModal" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade animated fadeIn" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,8 +155,7 @@
                         <div class="col-md-6">
                             <div class="form-group m-b-40">
                                 <label for="input8">Monto</label>
-                                <input formControlName="amount" type="number" class="form-control"
-                                    value="selectedMovement.amount" id="input12">
+                                <input formControlName="amount" type="number" class="form-control" value="selectedMovement.amount" id="input12">
                                 <span class="bar"></span>
                             </div>
                         </div>
@@ -172,8 +176,7 @@
                         <div *ngIf="editMovement.value.category === 'otra'" class="col-md-6">
                             <div class="form-group m-b-40">
                                 <label for="input1">Nueva categoría</label>
-                                <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}" type="text"
-                                    class="form-control" id="input1">
+                                <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="input1">
                                 <span class="bar"></span>
                             </div>
                         </div>
@@ -182,8 +185,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" (click)="updateMovement()" data-dismiss="modal"
-                    class="btn btn-primary">Actualizar</button>
+                <button type="button" (click)="updateMovement()" data-dismiss="modal" class="btn btn-primary">Actualizar</button>
             </div>
         </div>
     </div>

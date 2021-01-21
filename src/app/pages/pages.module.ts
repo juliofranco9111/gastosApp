@@ -25,7 +25,7 @@ import { InfoComponent } from './../components/info/info.component';
     InfoComponent,
     MovementsComponent,
     NewMovementComponent,
-    LoadingComponent,
+    LoadingComponent
   ],
   imports: [
     CommonModule,

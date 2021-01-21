@@ -38,6 +38,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   public balanceClass = 'success';
   public uid = localStorage.getItem('uid');
   public category2 = '';
+  public symbol = this.infoService.symbol;
 
   public months = [
     'Enero',
@@ -222,8 +223,10 @@ export class MovementsComponent implements OnInit, OnDestroy {
           'El movimiento se ha borrado',
           'success'
         );
-        this.totals();
       }
+      
+      
+      this.totals();
       
     });
 

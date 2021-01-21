@@ -10,13 +10,13 @@ import { environment } from 'src/environments/environment';
 
 import { ErrorComponent } from './pages/error/error.component';
 import { AppComponent } from './app.component';
-
-
+import { PruebaComponent } from './components/prueba/prueba.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorComponent,
+    PruebaComponent,
   ],
   imports: [
     BrowserModule,

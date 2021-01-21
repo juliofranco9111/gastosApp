@@ -1,3 +1,5 @@
+import { PruebaComponent } from './components/prueba/prueba.component';
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -11,6 +13,7 @@ const routes: Routes = [
   
   
   { path: '', redirectTo: '/pages', pathMatch: 'full' },
+  { path: 'prueba', component: PruebaComponent } ,
   { path: '**', component: ErrorComponent } 
 ];
 
