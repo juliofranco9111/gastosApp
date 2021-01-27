@@ -8,10 +8,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NavbarComponent } from './../components/navbar/navbar.component';
 import { PagesComponent } from './pages.component';
-import { HomeComponent } from './../components/home/home.component';
 import { MovementsComponent } from '../components/movements/movements.component';
 import { NewMovementComponent } from './../components/new-movement/new-movement.component';
 import { InfoComponent } from './../components/info/info.component';
+import { EditMovementComponent } from '../components/edit-movement/edit-movement.component';
 
 
 
@@ -21,11 +21,11 @@ import { InfoComponent } from './../components/info/info.component';
   declarations: [
     PagesComponent,
     NavbarComponent,
-    HomeComponent,
     InfoComponent,
     MovementsComponent,
     NewMovementComponent,
-    LoadingComponent
+    LoadingComponent,
+    EditMovementComponent
   ],
   imports: [
     CommonModule,
@@ -35,11 +35,11 @@ import { InfoComponent } from './../components/info/info.component';
   ],
   exports: [
     NavbarComponent,
-    HomeComponent,
     InfoComponent,
     MovementsComponent,
     NewMovementComponent,
     LoadingComponent,
+    EditMovementComponent
   ]
 })
 export class PagesModule { }

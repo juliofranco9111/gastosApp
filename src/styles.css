@@ -1,36 +1,85 @@
 /* You can add global styles to this file, and also import other style files */
 
-body{
-    background-color:#e9ecef;
+body {
+    background-color: #e9ecef;
     min-height: 100vh;
 }
 
-.cursor{
+.cursor {
     cursor: pointer;
 }
 
-.logo{
+.logo {
     font-size: 30px;
 }
 
-.icon-brand{
+.icon-brand {
     width: 150px;
 }
 
-.img-background{
+.img-background {
     background-image: url('assets/images/background/login-register.jpg');
 }
 
-
-
-.img-login-register{
+.img-login-register {
     width: 250px;
     margin: 0px auto;
     display: block;
     margin-bottom: 20px;
 }
 
-.dropdown-menu{
+.dropdown-menu {
     margin-left: -80px !important;
     margin-top: 5px;
+}
+
+.margin-x20 {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+
+.margin-x6 {
+    margin-left: 6px !important;
+    margin-right: 6px !important;
+}
+
+.margin-x8 {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+#new-button {
+    background-color: white;
+    width: 70px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 0px 0px 60px 60px;
+    top: -1px;
+    position: relative;
+}
+
+.round-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 120px;
+}
+
+#plus-button {
+    cursor: pointer;
+    font-size: 40px;
+    transition: all 200ms;
+}
+
+#plus-button:hover {
+    transform: scale(1.1);
+}
+
+.stick-button {
+    cursor: pointer;
+    font-size: 40px;
+    transition: all 200ms;
+}
+
+.stick-button:hover {
+    transform: scale(1.1);
 }

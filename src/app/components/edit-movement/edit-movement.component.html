@@ -1,13 +1,16 @@
-<div class="container">
+<app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
+
+
+<div *ngIf="!loading" class="container animated fadeIn">
     <div class="card mt-0">
         <div class="card-body">
             <div class="d-flex mt-0">
                 <span class="lstick"></span>
-                <h1 class="card-title mx-auto">Nuevo movimiento</h1>
+                <h1 class="card-title mx-auto">Editar movimiento</h1>
             </div>
 
 
-            <form [formGroup]="newMovement" (ngSubmit)="saveNewMovement()" class="form-material m-t-40">
+            <form [formGroup]="editMovement" (ngSubmit)="saveNewMovement()" class="form-material m-t-40">
 
                 <div class="row">
                     <div class="col-sm-6 margin-x20">
@@ -42,7 +45,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4 margin-x20">
-                        <div *ngIf="newMovement.controls['category'].value === 'otra'" class="form-group m-b-40">
+                        <div *ngIf="editMovement.controls['category'].value === 'otra'" class="form-group m-b-40">
                             <label for="input1">Nueva categoría</label>
                             <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="input1">
                             <span class="bar"></span>
@@ -65,11 +68,14 @@
     </div>
     <div class="row col col-md-5 mx-auto text-center">
 
-        <div class="col col-md-5 mt-2 stick-button" style="position: relative; top: -40px;">
-            <button (click)="saveNewMovement()" [disabled]="newMovement.invalid" class="btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+        <div *ngIf="!updateLoading" class="col col-md-5 mt-2 stick-button" style="position: relative; top: -40px;">
+            <button (click)="updateMovement() " [disabled]="editMovement.invalid" class="btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+        </div>
+        <div *ngIf="updateLoading" class="col col-md-5 mt-2 stick-button" style="position: relative; top: -40px;">
+            <button class="btn btn-success round-button text-white"><i class="fa fa-refresh fa-spin fa-2x"></i></button>
         </div>
         <div class="mx-auto col col-md-5 mt-2 stick-button" style="position: relative; top: -40px;">
-            <button (click)="cancel()" type="button" class="btn btn-danger round-button text-white"><i class="fa fa-times fa-2x"></i></button>
+            <button routerLink="/home" type="button" class="btn btn-danger round-button text-white"><i class="fa fa-times fa-2x"></i></button>
         </div>
     </div>
 </div>

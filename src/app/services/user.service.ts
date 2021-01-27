@@ -13,13 +13,15 @@ export class UserService {
 
   constructor(
     private database: DatabaseService,
-    private authService: AuthService
+    private authService: AuthService,
   ) { 
     this.getUser();
+  
+    
   }
 
   public uid: string;
-  public user:User
+  public user: any;
 
   saveUser(user: User) {
     return this.database.saveUser(user);

@@ -1,57 +1,42 @@
-<div *ngIf="saved" 
-                    class="alert alert-success animated fadeIn container col-9"> 
-                        <i class="fa fa-check"></i> Se ha guardado exitosamente tu información
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                    </div>
+<div *ngIf="saved" class="alert alert-success animated fadeIn container col-9">
+    <i class="fa fa-check"></i> Se ha guardado exitosamente tu información
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+</div>
 
-<div class="row mt-2 animated fadeIn container mx-auto">
+<app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
+
+<div *ngIf="!loading" class="row mt-2 animated fadeIn container mx-auto">
     <div class="col-12">
         <div class="card text-center">
             <div class="card-body">
                 <h3 class="card-title">
-                    <span class="fa fa-user-o"></span>
-                    Cargá tu información Personal
+                    <i class="fa fa-user-o"></i> {{ user.name }} {{user.lastName}} (Información financiera)
                 </h3>
-                <table style="clear: both" class="table table-bordered table-striped" id="user">
+                <table style="clear: both" class="table" id="user">
                     <tbody>
+
                         <tr>
                             <td>Simbolo de moneda preferido</td>
                             <td>
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
-                                    {{ info.symbol }}
-                                </a>
-
-                                <input class="form-control" *ngIf="edit" [(ngModel)]="info.symbol"
-                                    (keyup.enter)="saveChanges()" type="text" name="symbol" id="">
+                                <input class="form-control form-material col-8 mx-auto" autocomplete="off" [(ngModel)]="info.symbol" type="text" name="symbol" id="">
                             </td>
                         </tr>
 
                         <tr>
                             <td>¿Cuanto cobras?</td>
                             <td>
-                                <a *ngIf="!edit" (click)="click()" class="editable editable-click cursor"
-                                    style="color: rgb(152, 166, 173);">
-                                    {{ info.salary }}
-                                </a>
-
-                                <input class="form-control" *ngIf="edit" [(ngModel)]="info.salary"
-                                    (keyup.enter)="saveChanges()" type="number" name="monto" id="">
+                                <input class="form-control col-8 mx-auto" [(ngModel)]="info.salary" autocomplete="off" type="number" name="monto" id="">
                             </td>
                         </tr>
 
                         <tr>
-
                             <td> ¿Ahorrás?</td>
-
                             <td>
                                 <div class="checkbox checkbox-success">
-                                    <input [(ngModel)]="info.saving" id="checkbox1" type="checkbox">
+                                    <input [(ngModel)]="info.saving" name="saving" id="checkbox1" type="checkbox">
                                     <label for="checkbox1"></label>
                                 </div>
-
                             </td>
-
                         </tr>
 
                         <tr *ngIf="info.saving">
@@ -60,7 +45,7 @@
 
                             <td>
                                 <div class="col-8 mx-auto">
-                                    <select class="custom-select col-12" [(ngModel)]="info.percent" id="percent">
+                                    <select class="custom-select col-12" [(ngModel)]="info.percent" name="percent" id="percent">
                                         <option *ngFor="let item of percents" [value]="item">{{ item }}%</option>
                                     </select>
                                     <label for="checkbox1"></label>
@@ -76,29 +61,25 @@
                             </td>
                             <td>
                                 <div class="col-8 mx-auto">
-                                    <select class="custom-select col-12" [(ngModel)]="info.day"
-                                        id="inlineFormCustomSelect">
+                                    <select class="custom-select col-12" [(ngModel)]="info.day" name="day" id="inlineFormCustomSelect">
                                         <option selected="">Escoge uno...</option>
                                         <option *ngFor="let day of dayMonth" value="{{day}}">{{day}}</option>
                                     </select>
                                 </div>
                             </td>
                         </tr>
-
-
                     </tbody>
                 </table>
-                <div class="col-6 mx-auto">
 
-                    
-
-                    <button (click)="saveInfo()" type="button" class="btn btn-primary btn-block">
-                        Guardar
-                    </button>
-                </div>
             </div>
+
+        </div>
+        <div class="row mx-auto text-center stick-button" style="top: -45px; position: relative;">
+
+            <div class="col col-md-12 mt-2">
+                <button type="submit" (click)="saveInfo()" class="btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+            </div>
+
         </div>
     </div>
 </div>
-
-

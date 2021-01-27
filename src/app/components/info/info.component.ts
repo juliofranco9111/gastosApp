@@ -1,8 +1,11 @@
+import { User } from 'src/app/models/user.model';
+import { AuthService } from './../../services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from './../../services/database.service';
 import { Movement } from 'src/app/models/movement.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-info',
@@ -11,15 +14,14 @@ import { Movement } from 'src/app/models/movement.model';
 })
 export class InfoComponent implements OnInit, OnDestroy {
 
-  public edit = false;
-
   public subs: Subscription;
 
   public saved = false;
 
+  
   public dayMonth = [];
-
   percents = [];
+  public categories = [];
 
   public info = {
     salary: 0,
@@ -29,15 +31,16 @@ export class InfoComponent implements OnInit, OnDestroy {
     symbol: '$'
   };
 
-  public categories = [];
-
   public uid = localStorage.getItem('uid')
+  public user: User;
+
   public firstMovement: Movement = {
     type: 'ingreso',
     amount: 0,
     category: 'Salario',
     id: '',
-    month: 0
+    month: 0,
+    comment: ''
   };
 
   public saveMovement: Movement = {
@@ -45,13 +48,17 @@ export class InfoComponent implements OnInit, OnDestroy {
     amount: 0,
     category: 'Ahorro',
     id: '',
-    month: 0
+    month: 0,
+    comment: ''
   };
+
+  public loading = true;
 
 
   constructor(
     private dB: DatabaseService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {
 
 
@@ -67,6 +74,10 @@ export class InfoComponent implements OnInit, OnDestroy {
         this.percents.push(i);
       }
     }
+    if (this.uid) {
+      this.subs = this.dB.returnUserById(this.uid)
+        .subscribe(user => this.user = user , err => console.log(err))
+    }
 
     this.daysMonth();
 
@@ -80,17 +91,15 @@ export class InfoComponent implements OnInit, OnDestroy {
     this.subs = this.dB.getCategories(this.uid)
       .subscribe((categories: any) => {
         this.categories = Object.values(categories);
-      });
-  }
+      });   
+      
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000);
+    
+  }  
 
-  click() {
-    this.edit = true;
-  }
-
-  saveChanges() {
-    this.edit = false;
-  }
-
+  
   daysMonth() {
 
     for (let i = 1; i <= 31; i++) {
@@ -136,17 +145,18 @@ export class InfoComponent implements OnInit, OnDestroy {
           }
 
           this.saved = true;
-          this.edit = false;
+          
         })
         .catch(err => console.log(err));
-      setTimeout(() => {
-        this.saved = false;
-      },
-        3000);
-
+        setTimeout(() => {
+          this.saved = false;
+          this.router.navigateByUrl('/home')
+        }, 4500);
     } else {
       return
     }
+
+    
 
   }
 

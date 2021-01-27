@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireDatabase } from '@angular/fire/database';
+
 import { Movement } from '../models/movement.model';
 import { User } from '../models/user.model';
 import { map } from 'rxjs/operators';
@@ -36,6 +36,11 @@ export class DatabaseService {
 
   getMovements(uid: string, month: Number) {
     return this.dB.list(`users/${uid}/movements/${month}`).valueChanges();
+  }
+
+  getMovementById(uid: string, month: Number, id: string) {
+    return this.dB.object(`users/${uid}/movements/${month}/${id}`).valueChanges()
+      .pipe(map((movement: Movement) => movement))
   }
 
   saveMovement(uid: string, id: string, month: Number, data: Movement) {

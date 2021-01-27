@@ -17,7 +17,8 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     type: ['', Validators.required],
     amount: [, Validators.required],
     category: ['', Validators.required],
-    id: ['0', Validators.required]
+    id: ['0', Validators.required],
+    comment: ['',Validators.maxLength(300)]
   })
 
   public uid = localStorage.getItem('uid')
@@ -58,38 +59,31 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     
     const category = this.newMovement.controls['category'];
 
-    console.log(category);
 
-    if (category.value === 'otra' || category.value.length === 0) {
-      console.log('holi');
-      
-      category.setValue(this.category2)
-
+    if (category.value === 'otra' || category.value.length < 0) {
       console.log(category);
-    }
+      category.setValue(this.category2);
+    };
 
-    console.log(this.newMovement.value);
-    
     if (!this.categories.includes(category.value)) {      
       this.dB.saveCategory(category.value, this.uid);
-    }
+    };
 
     
     const data: Movement = this.newMovement.value;
     data.id = id;
     data.month = this.month;
 
-    console.log(data);
 
     this.dB.saveMovement(this.uid, id, this.month, data)
       .then(() => {
-        this.router.navigateByUrl('/movements')
+        this.router.navigateByUrl('/home')
       })
       .catch(err => console.log(err));
   }
 
   cancel() {
-    this.router.navigateByUrl('/movements');
+    this.router.navigateByUrl('/home');
   }
 
 

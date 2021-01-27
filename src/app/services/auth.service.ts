@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import auth from 'firebase';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,10 @@ export class AuthService {
   ) { }
 
 
-  getCurrentUser(): any{
+  getCurrentUser(){
     this.authFire.onAuthStateChanged( user => {
-      if(user){
+      if (user) {
+        console.log(user);
         return user
       }
     })

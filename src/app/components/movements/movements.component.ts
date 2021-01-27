@@ -1,12 +1,10 @@
+import { MovementsService } from './../../services/movements.service';
 import { Movement } from 'src/app/models/movement.model';
-import { UserService } from 'src/app/services/user.service';
-import { FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { InfoService } from './../../services/info.service';
 import { DatabaseService } from './../../services/database.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ThrowStmt } from '@angular/compiler';
 
 
 @Component({
@@ -55,19 +53,14 @@ export class MovementsComponent implements OnInit, OnDestroy {
     'Diciembre'
   ];
 
-  public selectedMovement: Movement;
+  
 
-  public editMovement = this.fb.group({
-    type: ['', Validators.required],
-    amount: [0, Validators.required],
-    category: ['',],
-    id: ['0', Validators.required]
-  });
+
 
   constructor(
     private dB: DatabaseService,
-    private fb: FormBuilder,
-    private infoService: InfoService
+    private infoService: InfoService,
+    private movementService: MovementsService
   ) { }
 
   ngOnDestroy() {
@@ -77,9 +70,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.getMovements();
     setTimeout(() => {
-      this.totals();
       this.loading = false;
-    },1000)
+    }, 800)
 
 
   }
@@ -99,7 +91,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     });
     this.expenses.forEach(mov => {
       this.totalExpenses += mov.amount;
-    }); 
+    });
     this.getBalance();
   }
 
@@ -112,6 +104,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
       this.balanceClass = 'warning'
     } else if (this.balance <= percent20) {
       this.balanceClass = 'danger'
+    } else {
+      this.balanceClass = 'success'
     }
   }
 
@@ -141,7 +135,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
     this.getFilterMovements();
     this.totals();
-    
+
   }
 
   getMovements() {
@@ -159,50 +153,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     });
   }
 
-  openModal(movement: Movement) {
-    // console.log(movement);
-    const { id, type, category, amount } = movement;
-    this.selectedMovement = movement
 
-    this.subscription = this.dB.getCategories(this.uid).subscribe((res: any) => {
-      if (!res || res === null) {
-        this.categories = [];
-      } else {
-        this.categories = Object.values(res)
-      }
-    }, err => console.log(err));
-
-    this.editMovement.controls['amount'].setValue(amount);
-    this.editMovement.controls['id'].setValue(id);
-    this.editMovement.controls['type'].setValue(type);
-    this.editMovement.controls['category'].setValue(category);
-  }
-
-  async updateMovement() {
-
-    let movUpdated = this.editMovement.value;
-    let id = movUpdated.id;
-    this.todayMonth = this.date.getMonth();
-
-    if (this.editMovement.controls['category'].value === 'otra') {
-      movUpdated.category = this.category2;
-    }
-    
-    if (this.editMovement.controls['category'].value === '') {
-      this.editMovement.controls['category'].setValue(this.category2);
-    }
-    
-    if (!this.categories.includes(movUpdated.category)) {
-      this.dB.saveCategory(movUpdated.category, this.uid);
-    }
-
-    await this.dB.updateMovement(this.uid, id, this.todayMonth, movUpdated)
-      .then(()=>{
-        this.totals();
-      })
-      .catch(err => console.log(err));      
-  }
-  
   deleteMovement(movement: Movement) {
     const { id, month } = movement;
 
@@ -224,15 +175,10 @@ export class MovementsComponent implements OnInit, OnDestroy {
           'success'
         );
       }
-      
-      
+
       this.totals();
-      
+
     });
-
-
-
-
   }
 
 }
