@@ -27,6 +27,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public data = false;
+  public info = true;
   public newMovButton = true;
   public changedMonth = false;
 
@@ -68,11 +69,17 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.getMovements();
     setTimeout(() => {
+      
+      if (!this.infoService.info) {
+        this.info = false;
+      } else {
+        this.subscription = this.getMovements();
+      }
       this.loading = false;
-    }, 800)
+    }, 1000)
 
+    
 
   }
 
