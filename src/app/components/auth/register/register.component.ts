@@ -1,3 +1,4 @@
+import { DatabaseService } from './../../../services/database.service';
 import { UserService } from './../../../services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -48,7 +49,8 @@ export class RegisterComponent implements OnDestroy{
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private userSevice: UserService
+    private userSevice: UserService,
+    private dB: DatabaseService
   ) { }
 
 
@@ -128,7 +130,7 @@ export class RegisterComponent implements OnDestroy{
           console.log(data);
           this.user.uid = data.user['uid'];
 
-          this.userSubscripction = this.userSevice.saveUser(this.user)
+          this.userSubscripction = this.dB.saveUser(this.user)
             .subscribe((user:any )=> {
               localStorage.setItem('uid', user.uid);
 

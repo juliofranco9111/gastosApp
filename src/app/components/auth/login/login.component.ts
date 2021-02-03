@@ -1,10 +1,13 @@
+import { User } from 'src/app/models/user.model';
+import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './../../../services/auth.service';
 import { UserService } from 'src/app/services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { DatabaseService } from '../../../services/database.service';
+
 
 @Component({
   selector: 'app-login',
@@ -12,12 +15,16 @@ import { DatabaseService } from '../../../services/database.service';
   styles: [
   ]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+
+
 
   public loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
+
+  public subscription: Subscription;
 
   public formSubmitted = false;
 
@@ -28,22 +35,26 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService,
     private authService: AuthService,
-    private db: DatabaseService,
+    private dB: DatabaseService,
     private fb: FormBuilder
   ) { }
 
+  ngOnDestroy(): void {
+    
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   ngOnInit() {
     if (localStorage.getItem('email')) {
-
       this.emailUser = this.loadStorage('email')
     }
-
   }
 
   logInWithEmailAndPassword() {
-    
+
     this.formSubmitted = true;
 
     const email = this.loginForm.value.email
@@ -56,17 +67,53 @@ export class LoginComponent implements OnInit {
     }
 
     this.authService.logIn(email, password)
-      .then((data:any) => {
+      .then((data: any) => {
         console.log(data)
 
         localStorage.setItem('uid', data.user.uid)
-        
+
         this.router.navigateByUrl('/home')
       })
       .catch(err => {
         Swal.fire('Error', err.message, 'error');
       })
   }
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle()
+      .then((user:any) => {
+        
+        const { uid, email } = user.user;
+        const { given_name, family_name } = user.additionalUserInfo.profile;
+        const name = given_name;
+        const lastName = family_name;
+
+        localStorage.setItem('uid', uid);
+
+        
+        const userGoogle: User = {
+          uid,
+          email,
+          name,
+          lastName,
+          agree: true
+        }
+
+        this.subscription = this.dB.saveUser(userGoogle)
+          .subscribe(user =>{
+            this.router.navigateByUrl('/home');
+          } 
+          , err => console.error(err))
+
+      })
+      .catch(err => console.error(err))
+  }
+
+
+
+
+
+  /* *************************** */
 
   notValidField(campo: string): boolean {
 

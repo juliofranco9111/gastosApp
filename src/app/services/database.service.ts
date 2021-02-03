@@ -4,7 +4,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Movement } from '../models/movement.model';
 import { User } from '../models/user.model';
 import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 
 
 
@@ -32,9 +32,16 @@ export class DatabaseService {
 
   //Movements
 
-  
+  getMonthsMovements(uid: string) {
+    return this.dB.object(`users/${uid}/movements`).valueChanges().
+      pipe(map(months => {
+        if (months) {
+          return Object.keys(months)
+        }
+      }));
+  }
 
-  getMovements(uid: string, month: Number) {
+  getMovements(uid: string, month: Number): Observable<any> {
     return this.dB.list(`users/${uid}/movements/${month}`).valueChanges();
   }
 
@@ -75,6 +82,7 @@ export class DatabaseService {
     this.dB.object(`users/${user.uid}/user`).set(user);
     return this.returnUserById(user.uid);
   }
+  
 
   returnUserById(uid: string) {
     return this.dB.object(`users/${uid}/user`).valueChanges()

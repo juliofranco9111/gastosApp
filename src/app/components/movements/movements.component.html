@@ -2,11 +2,22 @@
 <div class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 mb-3 animated fadeIn">
 
     <div *ngIf="!loading && data">
-        <select (change)="changeMonth($event.target.value)" class="form-control btn-muted">
+        <select *ngIf="todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted col-10">
 
-            <option *ngFor="let month of months; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
+            <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
             </option>
+
+            
         </select>
+
+        <select *ngIf="!todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted">
+
+            <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i+1" value="{{i}}">{{ month }}
+            </option>
+
+            
+        </select>
+
         <div *ngIf="changedMonth" class="container animated fadeIn mt-5">
             <app-loading></app-loading>
         </div>
@@ -19,7 +30,7 @@
     </div>
 </div>
 
-<div *ngIf="!loading && !info" class="card mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
+<div *ngIf="!loading && !info && !data" class="card mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
     <div class="card-body text-center">
         <h3>
             Tocá el ícono <i class="fa fa-user"></i> en la barra superior para cargar tu información financiera...
@@ -33,7 +44,6 @@
             Comenzá creando un moviemiento
         </h3>
     </div>
-
 </div>
 <div *ngIf="!loading && !data && info" class="text-center animated fadeIn" id="new-button">
     <a routerLink="/new" class="text-secondary">
@@ -41,7 +51,7 @@
     </a>
 </div>
 
-<div *ngIf="!loading && data" class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
+<div *ngIf="!loading && data && info" class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
 
     <div>
         <ul class="list-group">

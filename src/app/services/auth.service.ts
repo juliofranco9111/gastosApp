@@ -3,26 +3,24 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import auth from 'firebase';
-import { Observable } from 'rxjs';
+import firebase from 'firebase/app';
+
+
+
+
+declare const gapi: any;
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  public auth2: any;
+
   constructor(
     private authFire: AngularFireAuth
-  ) { }
-
-
-  getCurrentUser() {
-    this.authFire.onAuthStateChanged(user => {
-      if (user) {
-        console.log(user);
-        return user
-      }
-    })
-  }
+  ) { } 
 
 
   registerUser(email: string, password: string) {
@@ -38,22 +36,27 @@ export class AuthService {
       // This must be true.
       handleCodeInApp: true
     }
-
-/*     this.authFire. */
-
     return this.authFire.sendPasswordResetEmail(email, actionCodeSettings);
-    
   }
 
+  //IN
 
-
-
-  signOut() {
-    return this.authFire.signOut()
-  }
 
   logIn(email: string, password: string) {
     return this.authFire.signInWithEmailAndPassword(email, password);
   }
 
+  loginWithGoogle() {
+    console.log('google');
+    return this.authFire.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
+
+  // OUT
+  
+  signOut() {
+    return this.authFire.signOut()
+  }
+
+
+  
 }

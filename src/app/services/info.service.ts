@@ -1,6 +1,6 @@
 import { UserService } from 'src/app/services/user.service';
 import { DatabaseService } from './database.service';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +16,15 @@ export class InfoService {
 
   constructor(
     private dB: DatabaseService,
-    private userService: UserService
   ) { 
   
     this.dB.getInfo( this.uid ).subscribe((info:any) => {
-      this.info = info;
-
-      this.symbol = this.info.symbol;
+      if (info) {
+        this.info = info;
+        this.symbol = this.info.symbol;
+      } else {
+        return null;
+      }
     })
     
     

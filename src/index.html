@@ -1,13 +1,14 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Gastos</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <link href="./assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+<head>
+    <meta charset="utf-8">
+    <title>Gastos</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <link href="./assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="./assets/plugins/x-editable/dist/bootstrap-editable/css/bootstrap-editable.css">
     <link rel="stylesheet" href="./assets/plugins/bootstrap-switch/bootstrap-switch.min.css">
     <link rel="stylesheet" href="./assets/plugins/bootstrap-select/bootstrap-select.min.css">
@@ -16,14 +17,15 @@
     <link href="./assets/css/style.css" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="./assets/css/colors/default-dark.css" id="theme" rel="stylesheet">
-    
+
 
 
 </head>
-<body>
-  <app-root></app-root>
 
-  <!-- All Jquery -->
+<body>
+    <app-root></app-root>
+
+    <!-- All Jquery -->
     <!-- ============================================================== -->
     <script src="./assets/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
@@ -40,27 +42,9 @@
     <script src="./assets/plugins/sparkline/jquery.sparkline.min.js"></script>
     <!--Custom JavaScript -->
     <script src="./assets/js/custom.min.js"></script>
-    <!-- wysuhtml5 Plugin JavaScript -->
-    <script src="./assets/plugins/tinymce/tinymce.min.js"></script>
-    <script>
-    $(document).ready(function() {
 
-        if ($("#mymce").length > 0) {
-            tinymce.init({
-                selector: "textarea#mymce",
-                theme: "modern",
-                height: 300,
-                plugins: [
-                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                    "save table contextmenu directionality emoticons template paste textcolor"
-                ],
-                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
 
-            });
-        }
-    });
-    </script>
+    <script src="https://apis.google.com/js/platform.js"></script>
     <!-- ============================================================== -->
     <!-- Style switcher -->
     <!-- ============================================================== -->
@@ -69,4 +53,5 @@
     <script src="./assets/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
     <script src="./assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>
 </body>
+
 </html>

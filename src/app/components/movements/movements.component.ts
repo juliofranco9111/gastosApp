@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user.service';
 import { MovementsService } from './../../services/movements.service';
 import { Movement } from 'src/app/models/movement.model';
 import { InfoService } from './../../services/info.service';
@@ -5,6 +6,7 @@ import { DatabaseService } from './../../services/database.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { User } from 'src/app/models/user.model';
 
 
 @Component({
@@ -35,7 +37,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   public todayMonth = this.date.getMonth();
 
   public balanceClass = 'success';
-  public uid = localStorage.getItem('uid');
+  public user: User;
   public category2 = '';
   public symbol = this.infoService.symbol;
 
@@ -54,33 +56,60 @@ export class MovementsComponent implements OnInit, OnDestroy {
     'Diciembre'
   ];
 
+  public newMonths = [];
+
+
+
   
-
-
-
   constructor(
+    private userService: UserService,
     private dB: DatabaseService,
     private infoService: InfoService,
-    private movementService: MovementsService
+    private movementService: MovementsService,
   ) { }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.info || this.data) {
+      this.subscription.unsubscribe();
+    }
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      
-      if (!this.infoService.info) {
-        this.info = false;
-      } else {
-        this.subscription = this.getMovements();
-      }
-      this.loading = false;
-    }, 1000)
 
     
+    this.user = this.userService.user;
+    
 
+    this.subscription = this.dB.getMonthsMovements(this.user.uid).subscribe(months => {
+      if (months) {
+        for (let i = 0; i < months.length; i++) {
+          this.newMonths.push(this.months[months[i]]);
+        }
+      }
+    });
+    
+    this.subscription = this.getMovements().subscribe((movements: any) => {
+
+      if (!movements || movements.length === 0) {
+        this.data = false;
+        this.loading = false;
+      } else {
+        this.movements = movements;
+        this.data = true;
+        this.getFilterMovements();
+        this.totals()
+
+        if (!this.infoService.info) {
+          this.info = false;
+        } else {
+          this.info = true;
+        }
+      }
+    }); 
+    
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000)
   }
 
   getFilterMovements() {
@@ -103,30 +132,40 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   getBalance() {
-    const percent50 = (((this.movements[0].amount * 50) / 100));
-    const percent20 = (((this.movements[0].amount * 20) / 100));
-    this.balance = this.totalEarnings - this.totalExpenses;
 
-    if (this.balance <= percent50 && this.balance > percent20) {
-      this.balanceClass = 'warning'
-    } else if (this.balance <= percent20) {
-      this.balanceClass = 'danger'
-    } else {
-      this.balanceClass = 'success'
+    if (this.info) {
+      const percent50 = (((this.movements[0].amount * 50) / 100));
+      const percent20 = (((this.movements[0].amount * 20) / 100));
+      this.balance = this.totalEarnings - this.totalExpenses;
+
+      if (this.balance <= percent50 && this.balance > percent20) {
+        this.balanceClass = 'warning'
+      } else if (this.balance <= percent20) {
+        this.balanceClass = 'danger'
+      } else {
+        this.balanceClass = 'success'
+      }
     }
   }
 
-  changeMonth(value: Number) {
+  changeMonth(val: string) {
+
+
+    let value = parseInt(val);
+
+    if (this.todayMonth != 0) {
+      value = value + 1;
+    }
+
     if (value != this.todayMonth) {
       this.newMovButton = false;
     } else {
       this.newMovButton = true;
     }
 
-    this.subscription.unsubscribe();
     this.changedMonth = true;
 
-    this.subscription = this.dB.getMovements(this.uid, value)
+    this.subscription = this.dB.getMovements(this.user.uid, value )
       .subscribe((movements: Movement[]) => {
         if (!movements || movements.length === 0) {
           this.data = false;
@@ -146,18 +185,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   getMovements() {
-    return this.dB.getMovements(this.uid, this.todayMonth).subscribe((movements: any) => {
-
-      if (!movements || movements.length === 0) {
-        this.data = false;
-        this.loading = false;
-      } else {
-        this.movements = movements;
-        this.data = true;
-      }
-      this.getFilterMovements();
-      this.totals()
-    });
+    return this.dB.getMovements(this.user.uid, this.todayMonth)
   }
 
 
@@ -175,7 +203,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Si, eliminar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.dB.deleteMovement(this.uid, month, id);
+        this.dB.deleteMovement(this.user.uid, month, id);
         Swal.fire(
           'Eliminado',
           'El movimiento se ha borrado',
