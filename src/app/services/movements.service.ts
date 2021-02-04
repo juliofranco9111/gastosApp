@@ -45,7 +45,7 @@ export class MovementsService {
   public selectedMovement: Movement;
 
   constructor() { 
-    console.log('servicioooo');
+    // console.log('servicioooo');
   }
 
 

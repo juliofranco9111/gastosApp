@@ -45,6 +45,7 @@
                         <div *ngIf="newMovement.controls['category'].value === 'otra'" class="form-group m-b-40">
                             <label for="input1">Nueva categoría</label>
                             <input [(ngModel)]="category2" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="input1">
+                            <span *ngIf="categoryValidator" class="text-danger">* La categoria es obligatoria</span>
                             <span class="bar"></span>
                         </div>
                     </div>
@@ -52,11 +53,10 @@
                     <div class="col-sm-11 margin-x20 text-left mb-5">
                         <label for="input0">Comentario</label>
                         <input type="text" formControlName="comment" class="form-control">
+
                     </div>
-
-
-
                 </div>
+
 
 
 

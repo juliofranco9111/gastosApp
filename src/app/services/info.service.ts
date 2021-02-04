@@ -11,28 +11,32 @@ export class InfoService {
   public info:any;
   public symbol: string;
 
-  public uid = localStorage.getItem('uid')
+  public uid = '';
   
 
   constructor(
     private dB: DatabaseService,
+    private userService: UserService
   ) { 
-  
-    this.dB.getInfo( this.uid ).subscribe((info:any) => {
-      if (info) {
-        this.info = info;
-        this.symbol = this.info.symbol;
-      } else {
-        return null;
-      }
-    })
+    
+    setTimeout(() => {
+      this.uid = this.userService.user.uid;
+      this.dB.getInfo(this.uid).subscribe((info: any) => {
+        // console.log(info);
+        if (info) {
+          this.info = info;
+          this.symbol = this.info.symbol;
+        }
+      })
+      },800)
+    }
     
     
     
-  }
+}
  
   
 
 
 
-}
+

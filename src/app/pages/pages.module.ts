@@ -12,6 +12,7 @@ import { MovementsComponent } from '../components/movements/movements.component'
 import { NewMovementComponent } from './../components/new-movement/new-movement.component';
 import { InfoComponent } from './../components/info/info.component';
 import { EditMovementComponent } from '../components/edit-movement/edit-movement.component';
+import { UserCardComponent } from '../components/user-card/user-card.component';
 
 
 
@@ -25,7 +26,8 @@ import { EditMovementComponent } from '../components/edit-movement/edit-movement
     MovementsComponent,
     NewMovementComponent,
     LoadingComponent,
-    EditMovementComponent
+    EditMovementComponent,
+    UserCardComponent
   ],
   imports: [
     CommonModule,

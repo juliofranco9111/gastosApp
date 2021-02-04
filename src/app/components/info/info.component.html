@@ -1,19 +1,14 @@
-<!-- <div *ngIf="saved" class="alert alert-success animated fadeIn container col-9">
-    <i class="fa fa-check"></i> Se ha guardado exitosamente tu información
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-</div> -->
+<app-loading *ngIf="loading" class="animated fadeIn">
 
-<app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
+</app-loading>
 
 <div *ngIf="!loading" class="row mt-2 animated fadeIn container mx-auto">
     <div class="col-12">
         <div class="card text-center">
             <div class="card-body">
                 <h3 class="card-title">
-                    <i class="fa fa-user-o"></i> {{user.name}} {{user.lastName}}
-                    <span class="text-muted" style="font-size: 18px;">
-                        (Información financiera)
-                    </span>
+                    <i class="fa fa-money"></i> Información financiera
+
                 </h3>
                 <table style="clear: both" class="table" id="user">
                     <tbody>
@@ -84,5 +79,11 @@
             </div>
 
         </div>
+    </div>
+</div>
+
+<div *ngIf="!loading" class="row mt-2 animated fadeIn container mx-auto">
+    <div class="col-12">
+        <app-user-card></app-user-card>
     </div>
 </div>

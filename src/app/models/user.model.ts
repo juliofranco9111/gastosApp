@@ -3,9 +3,10 @@
 export class User {
   constructor(
     public uid: string,
-    public name: string,
-    public lastName: string,
+    public displayName: string,
     public email: string,
-    public agree: boolean
+    public agree: boolean,
+    public role: 'ADMIN' | 'USER',
+    public google: boolean
   ) {}
 }

@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit {
     console.log('out');
     this.authService.signOut()
       .then(data =>{
-        localStorage.removeItem('uid');
         this.router.navigateByUrl('/login');
       })
       .catch( err => console.log(err) )

@@ -68,11 +68,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authService.logIn(email, password)
       .then((data: any) => {
-        console.log(data)
-
-        localStorage.setItem('uid', data.user.uid)
-
-        this.router.navigateByUrl('/home')
+        this.dB.lastLogin(data.user.uid).then(() => {
+          this.router.navigateByUrl('/home')
+        })
       })
       .catch(err => {
         Swal.fire('Error', err.message, 'error');
@@ -83,25 +81,24 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.loginWithGoogle()
       .then((user:any) => {
         
-        const { uid, email } = user.user;
-        const { given_name, family_name } = user.additionalUserInfo.profile;
-        const name = given_name;
-        const lastName = family_name;
-
-        localStorage.setItem('uid', uid);
-
-        
+        const { uid, email, displayName } = user.user;
+                     
         const userGoogle: User = {
           uid,
           email,
-          name,
-          lastName,
-          agree: true
+          displayName,
+          agree: true,
+          role: 'USER',
+          google: true
         }
 
+        ;
+
         this.subscription = this.dB.saveUser(userGoogle)
-          .subscribe(user =>{
-            this.router.navigateByUrl('/home');
+          .subscribe(user => {
+            this.dB.lastLogin(uid).then(data => {
+              this.router.navigateByUrl('/home');
+            });
           } 
           , err => console.error(err))
 

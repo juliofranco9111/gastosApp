@@ -39,10 +39,11 @@ export class RegisterComponent implements OnDestroy{
 
   public user: User = {
     uid: '',
-    name: '',
-    lastName: '',
+    displayName: '',
     email: '',
-    agree: true
+    agree: true,
+    role: 'USER',
+    google: false
   };
 
   constructor(
@@ -113,8 +114,7 @@ export class RegisterComponent implements OnDestroy{
 
     const { name, lastName, email } = value;
 
-    this.user.name = name;
-    this.user.lastName = lastName;
+    this.user.displayName = name + ' ' + lastName;
     this.user.email = email;
 
     // console.log(this.registerForm.value);
@@ -127,12 +127,12 @@ export class RegisterComponent implements OnDestroy{
       this.authService.registerUser(value.email, value.password)
         .then(data => {
           console.log('creado');
-          console.log(data);
+          // console.log(data);
           this.user.uid = data.user['uid'];
 
           this.userSubscripction = this.dB.saveUser(this.user)
             .subscribe((user:any )=> {
-              localStorage.setItem('uid', user.uid);
+              // console.log(user);
 
             }, err => console.log(err) )
           

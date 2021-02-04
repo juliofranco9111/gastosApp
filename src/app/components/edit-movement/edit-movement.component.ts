@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user.service';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from './../../services/database.service';
 import { Movement } from 'src/app/models/movement.model';
@@ -15,7 +16,7 @@ import { Location } from '@angular/common';
 export class EditMovementComponent implements OnInit, OnDestroy{
 
   public idMovement: string;
-  public uid = localStorage.getItem('uid');
+  public uid: string;
 
 
 
@@ -41,6 +42,7 @@ export class EditMovementComponent implements OnInit, OnDestroy{
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private userService: UserService,
     private fb: FormBuilder,
     public dB: DatabaseService,
     private _location: Location
@@ -55,6 +57,9 @@ export class EditMovementComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
+
+    this.uid = this.userService.user.uid;
+
     this.idMovement = this.activatedRoute.params['value'].id;
     this.monthMovement = this.activatedRoute.params['value'].month;
     
@@ -92,7 +97,7 @@ export class EditMovementComponent implements OnInit, OnDestroy{
     
 
     if (this.editMovement.controls['category'].value === 'otra' && this.category2.length < 1) {
-      console.log('holi');
+      // console.log('holi');
       this.updateLoading = false;
       return;
     } else {
@@ -102,7 +107,7 @@ export class EditMovementComponent implements OnInit, OnDestroy{
           this.dB.saveCategory(this.category2, this.uid);
         };
       }
-      console.log('hola');
+      // console.log('hola');
       this.dB.updateMovement(this.uid, this.idMovement, this.monthMovement, this.editMovement.value)
       .then(() => {
         this.updateLoading = false;

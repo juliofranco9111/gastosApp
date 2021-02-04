@@ -21,7 +21,9 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     comment: ['',Validators.maxLength(300)]
   })
 
-  public uid = localStorage.getItem('uid')
+  public uid: string;
+
+  public categoryValidator = false;
 
   public categories: any[] = [];
 
@@ -43,6 +45,9 @@ export class NewMovementComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    this.uid = this.userService.user.uid;
+
     this.categorySubscribe = this.dB.getCategories(this.uid).subscribe((res) => {
 
       if (!res || res === null) {
@@ -61,8 +66,14 @@ export class NewMovementComponent implements OnInit, OnDestroy {
 
 
     if (category.value === 'otra' || category.value.length < 0) {
-      console.log(category);
-      category.setValue(this.category2);
+      console.log(category.value);
+      if (this.category2.length === 0) {
+        this.categoryValidator = true;
+        return false;
+      } else { 
+        category.setValue(this.category2);
+      }
+      
     };
 
     if (!this.categories.includes(category.value)) {      

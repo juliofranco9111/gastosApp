@@ -33,8 +33,8 @@ export class InfoComponent implements OnInit, OnDestroy {
     symbol: '$'
   };
 
-  public uid = localStorage.getItem('uid')
-  public user: User;
+  public uid = this.userService.user.uid;
+  public user = this.userService.user;
 
   public firstMovement: Movement = {
     type: 'ingreso',
@@ -79,7 +79,6 @@ export class InfoComponent implements OnInit, OnDestroy {
       }
     });
 
-
     for (let i = 1; i <= 40; i++) {
       if (i % 5 === 0) {
         this.percents.push(i);
@@ -95,8 +94,7 @@ export class InfoComponent implements OnInit, OnDestroy {
         }
       });
 
-    setTimeout(() => {
-      this.user = this.userService.user;
+    setTimeout(() => {      
       this.loading = false;
     }, 1000);
 

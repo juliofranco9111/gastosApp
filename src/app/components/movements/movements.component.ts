@@ -75,10 +75,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    
+        
     this.user = this.userService.user;
-    
 
     this.subscription = this.dB.getMonthsMovements(this.user.uid).subscribe(months => {
       if (months) {
@@ -90,6 +88,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     
     this.subscription = this.getMovements().subscribe((movements: any) => {
 
+
       if (!movements || movements.length === 0) {
         this.data = false;
         this.loading = false;
@@ -99,17 +98,19 @@ export class MovementsComponent implements OnInit, OnDestroy {
         this.getFilterMovements();
         this.totals()
 
-        if (!this.infoService.info) {
-          this.info = false;
-        } else {
-          this.info = true;
-        }
+        
       }
     }); 
     
     setTimeout(() => {
-      this.loading = false;
-    }, 1000)
+      
+      if (!this.infoService.info) {
+        this.info = false;
+      } else {        
+        this.info = true;
+      }
+      this.loading = false; 
+    }, 1100)
   }
 
   getFilterMovements() {

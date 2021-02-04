@@ -17,46 +17,69 @@ export class UserService {
     uid: '',
     agree: true,
     email: '',
-    lastName: '',
-    name: ''
+    displayName: '',
+    role: null,
+    google: null
   };
 
   constructor(
     private dB: DatabaseService,
-    private authService: AuthService,
     private authFire: AngularFireAuth
-  ) { 
+  ) {
     this.getUser();
   }
 
-  async UpdateProfile(displayName: string) {
+  async UpdateProfileName(displayName: string) {
     const profile = {
-      displayName: displayName,
-      photoURL: "https://example.com/jane-q-user/profile.jpg"
+      displayName
     }
     return (await this.authFire.currentUser).updateProfile(profile);
   }
 
-  
+  async UpdateProfileEmail(email: string) {
 
-  getUser() {
+    return (await this.authFire.currentUser).updateEmail(email);
+  }
+
+
+
+  async getUser() {
 
     const authUser = this.authFire.currentUser;
 
-    authUser.then(usuario => {
-      const { email, displayName, uid, emailVerified } = usuario;
-      
-      let split = displayName.split(' ');
-      let lastName = '';
-      let name = ''; 
+    authUser.then(async usuario => {
 
-      if (split.length > 1) {
-        lastName = split[1];
-        name = split[0];
-      } else {
-        name = displayName;
-      }      
-      return this.user = { uid, agree: true, email, lastName, name }
+
+      if (usuario) {
+
+
+        let { email, displayName, uid } = usuario;
+        
+        let role;
+        let google;
+
+        if (!displayName || !role || !google) {
+          this.dB.returnUserById(uid).subscribe(user => {
+            if (!displayName) {
+              displayName = user.displayName;
+            }
+            if (!role) {
+              role = user.role;
+            }
+            if (!google) {
+              google = user.google;
+            }
+
+            this.user = { uid, agree: true, email, displayName, role, google };
+
+            this.UpdateProfileName(displayName).then(() => true)
+
+          });
+       
+          this.user = { uid, agree: true, email, displayName, google, role };
+        }
+
+      }
     })
   }
 

@@ -1,0 +1,37 @@
+<div class="card text-center">
+    <div class="card-body">
+        <h3 class="card-title">
+            <i class="fa fa-user-o"></i> Información personal
+        </h3>
+        <table style="clear: both" class="table" id="user">
+            <tbody>
+
+                <tr>
+                    <td>Nombre</td>
+                    <td>
+                        <input [disabled]="disabled" class="form-control form-material col-8 mx-auto" autocomplete="off" [(ngModel)]="name" type="text" name="name" id="">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>E-mail</td>
+                    <td>
+                        <input [disabled]="disabled" class="form-control col-8 mx-auto" [(ngModel)]="email" autocomplete="off" type="text" name="email" id="">
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<div class="row mx-auto text-center stick-button" style="top: -45px; position: relative;">
+
+    <div class="col col-md-12 mt-2">
+        <button *ngIf="!edit" type="submit" (click)="editInfo()" class="animated fadeIn btn btn-secondary round-button text-gray"><i class="fa fa-pencil fa-2x"></i></button>
+        <button *ngIf="edit" type="submit" (click)="saveInfo()" class="animated fadeIn btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+    </div>
+
+</div>

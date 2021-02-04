@@ -89,5 +89,13 @@ export class DatabaseService {
       .pipe(map((user: User) => user))
   }
 
+  lastLogin(uid: string) {
+    const date = new Date;
+    const moment = date.getTime();
+
+    const itemRef = this.dB.object(`users/${uid}/user/lastLogin/`).set(moment);
+    return itemRef;
+  }
+
 
 }
