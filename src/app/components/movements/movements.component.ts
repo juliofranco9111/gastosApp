@@ -28,7 +28,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public data = false;
-  public info = true;
+  public info = false;
   public newMovButton = true;
   public changedMonth = false;
 
@@ -67,17 +67,31 @@ export class MovementsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnDestroy() {
-    console.log(this.subscription);
+    
     this.subscription.unsubscribe();
   }
 
-  ngOnInit() {  
+  ngOnInit() { 
+    const verifyUser = setInterval(() => {
+      
+      if (this.userService.user.uid) {
+        this.user = this.userService.user;
+        this.initSubscriptions();
+        clearInterval(verifyUser);
+        
+      }
+    }, 100);
+
+    const verifyInfo = setInterval(() => {
+      if (this.infoService.info) {
+        this.info = true;
+        clearInterval(verifyInfo)
+      }
+    },100)
+  }
+
+  initSubscriptions() {
     
-    
-
-
-    this.user = this.userService.user;
-
     this.subscription = this.dB.getMonthsMovements(this.user.uid).subscribe(months => {
       if (months) {
         for (let i = 0; i < months.length; i++) {
@@ -89,32 +103,18 @@ export class MovementsComponent implements OnInit, OnDestroy {
     });
 
     this.subscription = this.getMovements().subscribe((movements: any) => {
-
-
       if (!movements || movements.length === 0) {
         this.data = false;
-        this.loading = false;
       } else {
         this.movements = movements;
-        this.data = true;
         this.getFilterMovements();
-        this.totals()
-
-
+        this.totals();
+        this.data = true;
       }
     }, err => { return false });
 
-    setTimeout(() => {
-
-      if (!this.infoService.info) {
-        this.info = false;
-      } else {
-        this.info = true;
-      }
-      this.loading = false;
-    }, 1100)
-
     
+    this.loading = false;
   }
 
   getFilterMovements() {
@@ -155,7 +155,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   changeMonth(val: string) {
 
-
     let value = parseInt(val);
 
     if (this.todayMonth != 0) {
@@ -169,8 +168,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
 
     this.changedMonth = true;
-
-    
 
     this.subscription = this.dB.getMovements(this.user.uid, value)
       .subscribe((movements: Movement[]) => {
@@ -192,7 +189,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   getMovements() {
-    
     return this.dB.getMovements(this.user.uid, this.todayMonth)
   }
 
@@ -222,7 +218,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
           })
         .catch(err => console.log(err))
       }
-
       this.totals();
 
     });

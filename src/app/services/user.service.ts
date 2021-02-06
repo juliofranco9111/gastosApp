@@ -1,10 +1,8 @@
-import { InfoService } from './info.service';
+import { User } from 'src/app/models/user.model';
 import { Injectable } from '@angular/core';
 
 import { DatabaseService } from './database.service';
 
-import { User } from '../models/user.model';
-import { AuthService } from './auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 
@@ -29,6 +27,8 @@ export class UserService {
     this.getUser();
   }
 
+  
+
   async UpdateProfileName(displayName: string) {
     const profile = {
       displayName
@@ -41,46 +41,38 @@ export class UserService {
     return (await this.authFire.currentUser).updateEmail(email);
   }
 
-
+  reloadUser() {
+    this.getUser();
+  }
 
   async getUser() {
 
     const authUser = this.authFire.currentUser;
 
-    authUser.then(async usuario => {
-
-
+    await authUser.then(usuario => {
       if (usuario) {
-
-
         let { email, displayName, uid } = usuario;
-        
         let role;
         let google;
 
-        if (!displayName || !role || !google) {
-          this.dB.returnUserById(uid).subscribe(user => {
-            if (!displayName) {
-              displayName = user.displayName;
-            }
-            if (!role) {
-              role = user.role;
-            }
-            if (!google) {
-              google = user.google;
-            }
-
-            this.user = { uid, agree: true, email, displayName, role, google };
-
+        this.dB.returnUserById(uid).subscribe(async user => {
+          if (!displayName) {
+            console.log('display');
+            displayName = user.displayName;
             this.UpdateProfileName(displayName).then(() => true)
+          }  
+            role = user.role;
+            google = user.google;
+          
 
-          },err => {return false});
-       
-          this.user = { uid, agree: true, email, displayName, google, role };
-        }
+          this.user = { uid, agree: true, email, displayName, role, google };
 
+        }, err => false);       
       }
-    })
+      
+    });
+    
+
   }
 
 }

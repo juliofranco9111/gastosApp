@@ -1,6 +1,6 @@
 import { User } from 'src/app/models/user.model';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from './../../../services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -32,18 +32,19 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   public emailUser: string;
 
-  
+
 
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private dB: DatabaseService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ) { }
 
   ngOnDestroy(): void {
-    
+
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -61,8 +62,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.formSubmitted = true;
 
-    const email = this.loginForm.value.email
-    const password = this.loginForm.value.password
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
 
     if (this.remember) {
       this.saveStorage('email', this.loginForm.value.email);
@@ -72,8 +73,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authService.logIn(email, password)
       .then((data: any) => {
+        this.userService.reloadUser();
         this.dB.lastLogin(data.user.uid).then(() => {
-          this.router.navigateByUrl('/home')
+
+            this.router.navigateByUrl('/home');
+         
+
+
         })
       })
       .catch(err => {
@@ -82,11 +88,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   loginWithGoogle() {
+    
     this.authService.loginWithGoogle()
-      .then((user:any) => {
-        
+      .then((user: any) => {
+
+
         const { uid, email, displayName } = user.user;
-                     
+
         const userGoogle: User = {
           uid,
           email,
@@ -94,17 +102,20 @@ export class LoginComponent implements OnInit, OnDestroy {
           agree: true,
           role: 'USER',
           google: true
-        }
+        };
 
-        ;
+        this.userService.reloadUser();
 
         this.subscription = this.dB.saveUser(userGoogle)
           .subscribe(user => {
+
+            
+
             this.dB.lastLogin(uid).then(data => {
               this.router.navigateByUrl('/home');
             });
-          } 
-          , err => console.error(err))
+          }
+            , err => console.error(err))
 
       })
       .catch(err => console.error(err))

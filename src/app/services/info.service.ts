@@ -17,18 +17,21 @@ export class InfoService {
   constructor(
     private dB: DatabaseService,
     private userService: UserService
-  ) { 
-    
-    setTimeout(() => {
-      this.uid = this.userService.user.uid;
-      this.dB.getInfo(this.uid).subscribe((info: any) => {
-        // console.log(info);
-        if (info) {
-          this.info = info;
-          this.symbol = this.info.symbol;
-        }
-      },err => {return false})
-      },800)
+  ) {     
+    const verifyUser = setInterval(() => {
+      if (this.userService.user.uid) {
+        this.uid = this.userService.user.uid;
+        this.dB.getInfo(this.uid).subscribe((info: any) => {
+          // console.log(info);
+          if (info) {
+            this.info = info;
+            this.symbol = this.info.symbol;
+          }
+        }, err => { return false });    
+        
+        clearInterval(verifyUser);        
+      }
+    },200)
     }
     
     

@@ -58,13 +58,24 @@ export class EditMovementComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
 
-    this.uid = this.userService.user.uid;
+    
 
     this.idMovement = this.activatedRoute.params['value'].id;
-    this.monthMovement = this.activatedRoute.params['value'].month;
+    this.monthMovement = this.activatedRoute.params['value'].month;    
     
+
+    setInterval(() => {
+      if (this.userService.user.uid) {
+        this.uid = this.userService.user.uid;
+        this.initSubscriptions();        
+      }
+      
+    }, 200);
+  }
+
+  initSubscriptions() {
     this.subscription = this.dB.getMovementById(this.uid, this.monthMovement, this.idMovement)
-      .subscribe(movement => {        
+      .subscribe(movement => {
         this.selectedMovement = movement;
 
         const { id, type, category, amount, comment } = this.selectedMovement;
@@ -75,7 +86,7 @@ export class EditMovementComponent implements OnInit, OnDestroy{
         this.editMovement.controls['category'].setValue(category);
         this.editMovement.controls['comment'].setValue(comment);
 
-      })
+      });
 
     this.subscription = this.dB.getCategories(this.uid).subscribe((res: any) => {
       if (!res || res === null) {
@@ -85,9 +96,9 @@ export class EditMovementComponent implements OnInit, OnDestroy{
       }
     }, err => console.log(err));
 
-    setTimeout(() => {
-      this.loading = false;
-    }, 800);
+    this.loading = false;
+
+    
   }
 
   updateMovement() {

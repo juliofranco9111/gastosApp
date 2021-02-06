@@ -1,5 +1,3 @@
-import { User } from 'src/app/models/user.model';
-import { AuthService } from './../../services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -7,7 +5,6 @@ import { DatabaseService } from './../../services/database.service';
 import { Movement } from 'src/app/models/movement.model';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { rejects } from 'assert';
 
 @Component({
   selector: 'app-info',
@@ -33,7 +30,6 @@ export class InfoComponent implements OnInit, OnDestroy {
     symbol: '$'
   };
 
-  public uid = this.userService.user.uid;
   public user = this.userService.user;
 
   public firstMovement: Movement = {
@@ -71,7 +67,21 @@ export class InfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subs = this.getInfo(this.uid).subscribe((info: any) => {
+
+    this.daysMonth();
+    
+    const verifyUser = setInterval(() => {      
+      if (this.userService.user.uid){
+        this.user = this.userService.user;
+        this.initSubscriptions()
+        clearInterval(verifyUser)
+      }
+      
+    }, 100);
+  }
+
+  initSubscriptions() {
+    this.subs = this.getInfo(this.user.uid).subscribe((info: any) => {
       if (!info || info === null) {
         return
       } else {
@@ -84,21 +94,14 @@ export class InfoComponent implements OnInit, OnDestroy {
         this.percents.push(i);
       }
     }
-
-    this.daysMonth();
-
-    this.subs = this.dB.getCategories(this.uid)
+    this.subs = this.dB.getCategories(this.user.uid)
       .subscribe((categories: any) => {
         if (categories) {
           this.categories = Object.values(categories);
         }
-      },err => {return false});
-
-    setTimeout(() => {      
-      this.loading = false;
-    }, 1000);
-
-
+      }, err => { return false });
+    
+    this.loading = false;
   }
 
 
@@ -116,11 +119,8 @@ export class InfoComponent implements OnInit, OnDestroy {
       const date = new Date;
       const month = date.getMonth();
 
-      this.dB.saveInfo(this.uid, this.info)
+      this.dB.saveInfo(this.user.uid, this.info)
         .then(() => {
-          //console.log('guardado!');
-
-
           Swal.fire(
             {
               title: '¿Querés crear movimientos de salario y ahorro?',
@@ -148,21 +148,21 @@ export class InfoComponent implements OnInit, OnDestroy {
               for (let i = month; i <= 11; i++) {
                 if (!this.info.saving) {
                   this.firstMovement.month = i;
-                  this.dB.saveMovement(this.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
+                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
                 } else {
                   this.firstMovement.month = i;
                   this.saveMovement.month = i;
-                  this.dB.saveMovement(this.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
-                  this.dB.saveMovement(this.uid, this.saveMovement.id, this.saveMovement.month, this.saveMovement);
+                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
+                  this.dB.saveMovement(this.user.uid, this.saveMovement.id, this.saveMovement.month, this.saveMovement);
                 }
               }
 
               if (!this.categories.includes('Salario')) {
-                this.dB.saveCategory(this.firstMovement.category, this.uid);
+                this.dB.saveCategory(this.firstMovement.category, this.user.uid);
               }
 
               if (!this.categories.includes('Ahorro')) {
-                this.dB.saveCategory(this.saveMovement.category, this.uid);
+                this.dB.saveCategory(this.saveMovement.category, this.user.uid);
               }
 
               Swal.fire(
@@ -192,10 +192,7 @@ export class InfoComponent implements OnInit, OnDestroy {
 
         })
         .catch(err => console.log(err));
-      /* setTimeout(() => {
-        this.saved = false;
-        this.router.navigateByUrl('/home')
-      }, 4500); */
+      
     } else {
       return
     }

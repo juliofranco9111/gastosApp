@@ -50,7 +50,7 @@ export class RegisterComponent implements OnDestroy{
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private userSevice: UserService,
+    private userService: UserService,
     private dB: DatabaseService
   ) { }
 
@@ -129,6 +129,8 @@ export class RegisterComponent implements OnDestroy{
           console.log('creado');
           // console.log(data);
           this.user.uid = data.user['uid'];
+
+          this.userService.reloadUser();
 
           this.userSubscripction = this.dB.saveUser(this.user)
             .subscribe((user:any )=> {
