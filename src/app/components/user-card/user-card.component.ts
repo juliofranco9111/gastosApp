@@ -1,3 +1,4 @@
+import { DatabaseService } from './../../services/database.service';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { Component, OnInit } from '@angular/core';
@@ -19,7 +20,8 @@ export class UserCardComponent implements OnInit {
   public disabled = true;
   
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private dB: DatabaseService
     ) { }
     
     ngOnInit(): void {
@@ -34,7 +36,11 @@ export class UserCardComponent implements OnInit {
   saveInfo() {
     this.userService.UpdateProfileName(this.name)
       .then(() => {
-        return true;
+        this.dB.updateName(this.user.uid, this.name)
+          .then(() => {
+            return true;
+        })
+        .catch(err => console.log(err))
       })
       .catch(err => {
         Swal.fire('Error', err.message, 'error');
@@ -42,7 +48,11 @@ export class UserCardComponent implements OnInit {
     });
     this.userService.UpdateProfileEmail(this.email)
       .then(() => {
-        return true;
+        this.dB.updateEmail(this.user.uid, this.email)
+          .then(() => {
+            return true;
+        })
+        .catch(err => console.log(err))
       })
       .catch(err => {
         console.log(err);

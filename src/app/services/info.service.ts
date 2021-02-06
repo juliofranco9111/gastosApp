@@ -27,7 +27,7 @@ export class InfoService {
           this.info = info;
           this.symbol = this.info.symbol;
         }
-      })
+      },err => {return false})
       },800)
     }
     

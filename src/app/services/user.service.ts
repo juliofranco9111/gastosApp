@@ -74,7 +74,7 @@ export class UserService {
 
             this.UpdateProfileName(displayName).then(() => true)
 
-          });
+          },err => {return false});
        
           this.user = { uid, agree: true, email, displayName, google, role };
         }

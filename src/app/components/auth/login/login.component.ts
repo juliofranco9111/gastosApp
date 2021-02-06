@@ -32,6 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   public emailUser: string;
 
+  
+
 
   constructor(
     private router: Router,
@@ -48,8 +50,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     if (localStorage.getItem('email')) {
-      this.emailUser = this.loadStorage('email')
+      this.emailUser = localStorage.getItem('email')
+      this.loginForm.controls.email.setValue(this.emailUser);
     }
   }
 

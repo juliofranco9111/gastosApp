@@ -97,5 +97,13 @@ export class DatabaseService {
     return itemRef;
   }
 
+  updateName(uid: string, name: string) {
+    return this.dB.object(`users/${uid}/user/displayName/`).set(name);
+  }
+
+  updateEmail(uid: string, email: string) {
+    return this.dB.object(`users/${uid}/user/email/`).set(email);
+  }
+
 
 }

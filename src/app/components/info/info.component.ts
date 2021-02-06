@@ -77,7 +77,7 @@ export class InfoComponent implements OnInit, OnDestroy {
       } else {
         this.info = info;
       }
-    });
+    },err => {return false});
 
     for (let i = 1; i <= 40; i++) {
       if (i % 5 === 0) {
@@ -92,7 +92,7 @@ export class InfoComponent implements OnInit, OnDestroy {
         if (categories) {
           this.categories = Object.values(categories);
         }
-      });
+      },err => {return false});
 
     setTimeout(() => {      
       this.loading = false;
