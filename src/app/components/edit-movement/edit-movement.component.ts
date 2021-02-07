@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
   styles: [
   ]
 })
-export class EditMovementComponent implements OnInit, OnDestroy{
+export class EditMovementComponent implements OnInit, OnDestroy {
 
   public idMovement: string;
   public uid: string;
@@ -57,19 +57,15 @@ export class EditMovementComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-
-    
-
     this.idMovement = this.activatedRoute.params['value'].id;
-    this.monthMovement = this.activatedRoute.params['value'].month;    
-    
+    this.monthMovement = this.activatedRoute.params['value'].month;
 
-    setInterval(() => {
+    const verifyUser = setInterval(() => {
       if (this.userService.user.uid) {
         this.uid = this.userService.user.uid;
-        this.initSubscriptions();        
+        this.initSubscriptions();
+        clearInterval(verifyUser)
       }
-      
     }, 200);
   }
 
@@ -77,15 +73,12 @@ export class EditMovementComponent implements OnInit, OnDestroy{
     this.subscription = this.dB.getMovementById(this.uid, this.monthMovement, this.idMovement)
       .subscribe(movement => {
         this.selectedMovement = movement;
-
         const { id, type, category, amount, comment } = this.selectedMovement;
-
         this.editMovement.controls['amount'].setValue(amount);
         this.editMovement.controls['id'].setValue(id);
         this.editMovement.controls['type'].setValue(type);
         this.editMovement.controls['category'].setValue(category);
         this.editMovement.controls['comment'].setValue(comment);
-
       });
 
     this.subscription = this.dB.getCategories(this.uid).subscribe((res: any) => {
@@ -98,14 +91,11 @@ export class EditMovementComponent implements OnInit, OnDestroy{
 
     this.loading = false;
 
-    
   }
 
   updateMovement() {
 
     this.updateLoading = true;
-     
-    
 
     if (this.editMovement.controls['category'].value === 'otra' && this.category2.length < 1) {
       // console.log('holi');
@@ -114,23 +104,22 @@ export class EditMovementComponent implements OnInit, OnDestroy{
     } else {
       if (this.editMovement.controls['category'].value === 'otra') {
         this.editMovement.controls['category'].setValue(this.category2);
-        if (!this.categories.includes(this.category2)) {      
+        if (!this.categories.includes(this.category2)) {
           this.dB.saveCategory(this.category2, this.uid);
         };
       }
       // console.log('hola');
       this.dB.updateMovement(this.uid, this.idMovement, this.monthMovement, this.editMovement.value)
-      .then(() => {
-        this.updateLoading = false;
-        this._location.back();
-      })
-      .catch(err => console.log(err));
+        .then(() => {
+          this.updateLoading = false;
+          this._location.back();
+        })
+        .catch(err => console.log(err));
     }
   }
-    
-  }
+
+}
 
 
 
 
-  
