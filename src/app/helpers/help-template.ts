@@ -9,10 +9,8 @@ export const template = [
           </h3>
         
         
-        <div class="card-body">
-        <h3 class="card-title">
-        <i class="fa fa-money"></i> Información financiera 
-        </h3>
+        <div>
+        
         <table id="user" class="table" style="clear: both;">
         
         <tbody>

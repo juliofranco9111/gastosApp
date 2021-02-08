@@ -81,7 +81,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
           this.editMovement.controls['category'].setValue(category);
           this.editMovement.controls['comment'].setValue(comment);
         }
-      });
+      },err=>false);
 
 
     this.subscription = this.dB.getCategories(this.uid).subscribe((res: any) => {
@@ -90,7 +90,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
       } else {
         this.categories = Object.values(res);
       }
-    }, err => console.log(err));
+    }, err => false);
 
     this.loading = false;
 

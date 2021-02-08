@@ -14,14 +14,18 @@ import Swal from 'sweetalert2';
 export class InfoComponent implements OnInit, OnDestroy {
 
   public subs: Subscription;
+  public sub1 = false;
+  public sub2 = false;
 
   public saved = false;
   public buttonLoad = false;
 
 
   public dayMonth = [];
-  percents = [];
+  public percents = [];
   public categories = [];
+
+  
 
   public info = {
     salary: 0,
@@ -81,14 +85,24 @@ export class InfoComponent implements OnInit, OnDestroy {
       }
 
     }, 100);
+
+    const verifyAllInfo = setInterval(() => {
+      if (this.sub1 && this.sub2) {
+        this.loading = false;
+        clearInterval(verifyAllInfo)
+      }
+    },100)
   }
 
   initSubscriptions() {
     this.subs = this.getInfo(this.user.uid).subscribe((info: any) => {
       if (!info || info === null) {
-        return
+        this.sub1 = true;
+        return;
       } else {
+        console.log(this.info);
         this.info = info;
+        this.sub1 = true;
       }
     }, err => { return false });
 
@@ -100,11 +114,10 @@ export class InfoComponent implements OnInit, OnDestroy {
     this.subs = this.dB.getCategories(this.user.uid)
       .subscribe((categories: any) => {
         if (categories) {
+          this.sub2 = true;
           this.categories = Object.values(categories);
         }
       }, err => { return false });
-
-    this.loading = false;
   }
 
 

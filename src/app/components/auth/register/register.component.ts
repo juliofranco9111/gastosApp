@@ -31,6 +31,7 @@ export class RegisterComponent implements OnDestroy {
   });
 
   public userSubscription: Subscription;
+  public categorySubscription: Subscription;
 
   public formSubmitted = false;
 
@@ -56,9 +57,15 @@ export class RegisterComponent implements OnDestroy {
 
 
   ngOnDestroy(): void {
+
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+
+    if (this.categorySubscription) {
+      this.categorySubscription.unsubscribe();
+    }
+
   }
 
   // Form - Validator
@@ -125,32 +132,44 @@ export class RegisterComponent implements OnDestroy {
     } else {
       this.confirmButton = true;
 
+
+
       this.authService.registerUser(value.email, value.password)
         .then(data => {
           this.user.uid = data.user['uid'];
-          this.userService.reloadUser();
+
 
           this.userSubscription = this.dB.saveUser(this.user)
             .subscribe((user: User) => {
-              this.userSubscription = this.dB.getCategories(user.uid).subscribe(categories => {
+              this.userService.reloadUser();
+              this.categorySubscription = this.firstCategoriesSave(user.uid).subscribe((categories: any[]) => {
+                console.log(categories);
                 if (!categories) {
-                  const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
-                  categoriesUser.forEach(category => {
-                    this.dB.saveCategory(category, user.uid)
-                  });
+                  ('no hay')
+                  const categoriesUser = ['Alquiler', 'Transporte', 'Servicios', 'Comida', 'Ocio', 'Ropa'];
+                  this.dB.saveCategories(categoriesUser, user.uid);
+                  this.router.navigateByUrl('/home');
+                } else {
+                  console.log('si hay');
+                  this.router.navigateByUrl('/home');
                 }
-              }, err => false);
-            }, err => false);
 
-          this.router.navigateByUrl('/home');
-
+              }, err => {
+                console.log('hubo un error');
+                this.googleButton = false;
+                return false
+              });
+            })
         })
+
         .catch(err => {
           this.confirmButton = false;
+
           Swal.fire('Error', err.message, 'error');
         });
     }
   }
+
 
 
   loginWithGoogle() {
@@ -159,8 +178,6 @@ export class RegisterComponent implements OnDestroy {
 
     this.authService.loginWithGoogle()
       .then((user: any) => {
-
-
         const { uid, email, displayName } = user.user;
 
         const userGoogle: User = {
@@ -174,21 +191,28 @@ export class RegisterComponent implements OnDestroy {
 
         this.userService.reloadUser();
 
-        this.userSubscription = this.dB.saveUser(userGoogle)
-          .subscribe(user => {
-            this.userSubscription = this.dB.getCategories(user.uid).subscribe(categories => {
-              if (!categories) {
-                const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
-                categoriesUser.forEach(category => {
-                  this.dB.saveCategory(category, user.uid)
-                });
-              }
-            }, err => false);
+        this.dB.saveUser(userGoogle);
 
-            this.dB.lastLogin(uid).then(data => {
-              this.router.navigateByUrl('/home');
-            });
-          }, err => false)
+        this.dB.lastLogin(uid);
+
+        this.categorySubscription = this.firstCategoriesSave(userGoogle.uid).subscribe((categories: any[]) => {
+          if (!categories) {
+            const categoriesUser = ['Alquiler', 'Transporte', 'Servicios', 'Comida', 'Ocio', 'Ropa'];
+            this.dB.saveCategories(categoriesUser, uid);
+            this.userService.reloadUser();
+            this.router.navigateByUrl('/home');
+          } else {
+            this.userService.reloadUser();
+            this.router.navigateByUrl('/home');
+          }
+
+        }, err => {
+          console.log('hubo un error');
+          this.googleButton = false;
+          return false
+        });
+
+
 
       })
       .catch(err => {
@@ -196,4 +220,15 @@ export class RegisterComponent implements OnDestroy {
         this.googleButton = false;
       })
   }
+
+
+  firstCategoriesSave(uid: string) {
+   
+    return this.dB.getCategories(uid);
+
+  }
+
+
 }
+
+

@@ -26,15 +26,25 @@
         </div>
     </div>
 
-    <div *ngIf="!loading && data" class="animated fadeIn">
-        <select *ngIf="todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted col-10">
+    <div *ngIf="!loading && data" class="animated fadeIn d-flex justify-content-between">
+
+        <select *ngIf="todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted col col-sm-9 my-1">
             <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
             </option>            
         </select>
-        <select *ngIf="!todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted">
+        <select *ngIf="!todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted col col-sm-9 my-1">
             <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i+1" value="{{i}}">{{ month }}
             </option>            
         </select>
+
+        <select disabled class="form-control btn-muted col col-sm-2 my-1">
+            <option>2021
+            </option>            
+        </select>
+
+
+
+
         <div *ngIf="changedMonth" class="container animated fadeIn mt-5">
             <app-loading></app-loading>
         </div>
@@ -127,9 +137,9 @@
     </a>
 </div>
 
-<div *ngIf="!loading && data && !changedMonth" class="row container mx-auto">
+<div *ngIf="!loading && data && !changedMonth" class="col-12 col-sm-5 mx-auto animated fadeIn mt-2 d-flex justify-content-between">
 
-    <div class="card col-12 col-sm-4 mx-auto my-2">
+    <div class="card col-xl-5 my-2">
         <div class="card-body">
             <div class="d-block">
                 <div class="stats">
@@ -141,7 +151,7 @@
             </div>
         </div>
     </div>
-    <div class="card col-12 col-sm-4 mx-auto my-2">
+    <div class="card col-xl-5 my-2">
         <div class="card-body">
             <div class="d-block">
                 <div class="stats">
@@ -157,8 +167,8 @@
 </div>
 
 <div *ngIf="!loading && data && !changedMonth" class="card bg-{{balanceClass}} text-white col-12 col-sm-5 container mx-auto animated fadeIn mt-2">
-    <div>
 
+    <div>
         <div class="card-body">
             <h3 class="text-white text-center">Balance</h3>
             <div class="d-block">

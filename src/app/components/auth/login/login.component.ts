@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public remember = true;
 
   public emailUser: string;
-  
+
   public confirmButton = false;
   public googleButton = false;
 
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .then((data: any) => {
         this.userService.reloadUser();
         this.dB.lastLogin(data.user.uid).then(() => {
-            this.router.navigateByUrl('/home');
+          this.router.navigateByUrl('/home');
         })
       })
       .catch(err => {
@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginWithGoogle() {
 
     this.googleButton = true;
-    
+
     this.authService.loginWithGoogle()
       .then((user: any) => {
 
@@ -108,23 +108,29 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.userService.reloadUser();
 
-        this.subscription = this.dB.saveUser(userGoogle)
-          .subscribe(user => {
-            this.subscription = this.dB.getCategories(user.uid).subscribe(categories => {
-              if (!categories) {
-                const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
-                categoriesUser.forEach(category => {
-                  this.dB.saveCategory(category, user.uid)
-                });
-              }
-            }, err => false);
+        this.dB.saveUser(userGoogle);
 
-            this.dB.lastLogin(uid).then(data => {
-              this.router.navigateByUrl('/home');
-            });
+        this.dB.lastLogin(uid);
+
+        this.subscription = this.firstCategoriesSave(userGoogle.uid).subscribe((categories: any[]) => {
+          console.log(categories);
+          if (!categories) {
+            ('no hay')
+            const categoriesUser = ['Alquiler', 'Transporte', 'Servicios', 'Comida', 'Ocio', 'Ropa'];
+            this.dB.saveCategories(categoriesUser, uid);
+            this.router.navigateByUrl('/home');
+          } else {
+            console.log('si hay');
+            this.router.navigateByUrl('/home');
           }
-            , err => false)
 
+        }, err => {
+          console.log('hubo un error');
+          this.googleButton = false;
+          return false
+        });
+
+          
       })
       .catch(err => {
         console.error(err);
@@ -132,9 +138,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       })
   }
 
-
-
-
+  firstCategoriesSave(uid: string){
+    
+    return this.dB.getCategories(uid);
+  }
 
   /* *************************** */
 

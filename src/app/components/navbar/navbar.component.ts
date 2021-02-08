@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
       backdrop: true,
       confirmButtonText: 'Entendido <i class="fa fa-check"></i>',
       confirmButtonColor:'#398bf7',
-      progressSteps: ['1', '<i class="fa fa-lightbulb-o"></i>', '2', '3']
+      progressSteps: ['1', '2', '3', '4']
     }).queue(template)
   }
 

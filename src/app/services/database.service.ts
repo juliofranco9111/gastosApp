@@ -67,6 +67,12 @@ export class DatabaseService {
 
   //Categories
 
+  saveCategories( categories:any[] , uid:string ) {
+    const itemRef = this.dB.object(`users/${uid}/categories`);
+    itemRef.set(categories);
+  }
+
+
   saveCategory(category: string, uid: string) {
     const itemRef = this.dB.list(`users/${uid}/categories`);
     itemRef.push(category);

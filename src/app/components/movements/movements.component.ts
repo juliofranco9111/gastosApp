@@ -16,11 +16,15 @@ import { User } from 'src/app/models/user.model';
 export class MovementsComponent implements OnInit, OnDestroy {
 
   public subscription: Subscription;
+  public sub1 = false;
+  public sub2 = false;
+  
 
   public movements: Movement[] = [];
   public earnings = [];
   public expenses = [];
   public categories = [];
+  public infoUser: {};
 
   public totalEarnings = 0;
   public totalExpenses = 0;
@@ -35,11 +39,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
   public date = new Date;
   public todayMonth = this.date.getMonth();
 
-  public balanceClass = 'success';
+  
   public user: User;
   public category2 = '';
-  public symbol = this.infoService.symbol;
-
+  public balanceClass = 'success';
+  
   public months = [
     'Enero',
     'Febrero',
@@ -74,32 +78,24 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
-    const verifyUser = setInterval(() => {
-      if (this.userService.user.uid) {
-        this.user = this.userService.user;
-        this.initSubscriptions();
-        clearInterval(verifyUser);
-      } 
-    }, 100);
+  async ngOnInit() {
+    
+    await this.userService.reloadUser().then(data => {
+      const verifyUser = setInterval(() => {
+        if (this.userService.user.uid) {
+          this.user = this.userService.user;
+          this.initSubscriptions();
+          clearInterval(verifyUser);
+        }
+      }, 100);
+    });
 
-    let i = 0;
-
-    const verifyInfo = setInterval(() => {
-      i++;
-      if (this.infoService.info) {
-        this.info = true;
+    const verifyAllInfo = setInterval(() => {
+      if (this.sub1 && this.sub2) {
         this.loading = false;
-        clearInterval(verifyInfo);
-      } else if (i === 20) {
-        this.info = false;
-        this.loading = false;
-        clearInterval(verifyInfo);
+        clearInterval(verifyAllInfo)
       }
-    }, 100);
-
-
-
+    },200)
   }
 
   initSubscriptions() {
@@ -114,13 +110,26 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return false
     });
 
+    this.subscription = this.infoService.getInfo(this.user.uid).subscribe(info => {
+      if (info) {
+        this.infoUser = info;
+        this.info = true;
+        this.sub1 = true;
+      } else {
+        this.info = false;
+        this.sub1 = true;
+      }
+    } )
+
     this.subscription = this.getMovements().subscribe((movements: any) => {
       if (!movements || movements.length === 0) {
         this.data = false;
+        this.sub2 = true;
       } else {
         this.movements = movements;
         this.getFilterMovements();
         this.data = true;
+        this.sub2 = true;
       }
     }, err => { return false });
 

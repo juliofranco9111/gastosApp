@@ -42,7 +42,8 @@ export class UserService {
   }
 
   reloadUser() {
-    this.getUser();
+    return this.getUser();
+    
   }
 
   async getUser() {
