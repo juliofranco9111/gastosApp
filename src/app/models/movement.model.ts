@@ -6,6 +6,7 @@ export class Movement {
     public category: string,
     public id: string,
     public month: Number,
+    public year: Number,
     public comment: string
   ) {}
 }

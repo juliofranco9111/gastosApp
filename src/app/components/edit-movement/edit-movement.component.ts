@@ -21,6 +21,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
 
 
   public monthMovement: Number;
+  public yearMovement: Number;
 
   public subscription: Subscription;
 
@@ -59,6 +60,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.idMovement = this.activatedRoute.params['value'].id;
     this.monthMovement = this.activatedRoute.params['value'].month;
+    this.yearMovement = this.activatedRoute.params['value'].year;
 
     const verifyUser = setInterval(() => {
       if (this.userService.user.uid) {
@@ -70,7 +72,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
   }
 
   initSubscriptions() {
-    this.subscription = this.dB.getMovementById(this.uid, this.monthMovement, this.idMovement)
+    this.subscription = this.dB.getMovementById(this.uid, this.monthMovement, this.yearMovement,this.idMovement)
       .subscribe(movement => {
         if (movement) {
           this.selectedMovement = movement;
@@ -112,7 +114,7 @@ export class EditMovementComponent implements OnInit, OnDestroy {
         };
       }
       // console.log('hola');
-      this.dB.updateMovement(this.uid, this.idMovement, this.monthMovement, this.editMovement.value)
+      this.dB.updateMovement(this.uid, this.idMovement, this.monthMovement, this.yearMovement, this.editMovement.value)
         .then(() => {
           this.updateLoading = false;
           this._location.back();

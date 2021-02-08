@@ -32,8 +32,8 @@ export class DatabaseService {
 
   //Movements
 
-  getMonthsMovements(uid: string) {
-    return this.dB.object(`users/${uid}/movements`).valueChanges().
+  getMonthsMovements(uid: string, year:number) {
+    return this.dB.object(`users/${uid}/movements/${year}/`).valueChanges().
       pipe(map(months => {
         if (months) {
           return Object.keys(months)
@@ -41,28 +41,28 @@ export class DatabaseService {
       }));
   }
 
-  getMovements(uid: string, month: Number): Observable<any> {
-    return this.dB.list(`users/${uid}/movements/${month}`).valueChanges();
+  getMovements(uid: string, month: Number, year: Number): Observable<any> {
+    return this.dB.list(`users/${uid}/movements/${year}/${month}`).valueChanges();
   }
 
-  getMovementById(uid: string, month: Number, id: string) {
-    return this.dB.object(`users/${uid}/movements/${month}/${id}`).valueChanges()
+  getMovementById(uid: string, month: Number, year:Number, id: string) {
+    return this.dB.object(`users/${uid}/movements/${year}/${month}/${id}`).valueChanges()
       .pipe(map((movement: Movement) => movement))
   }
 
-  saveMovement(uid: string, id: string, month: Number, data: Movement) {
+  saveMovement(uid: string, id: string, month: Number,year: Number, data: Movement) {
 
-    return this.dB.object(`users/${uid}/movements/${month}/${id}`).set(data);
+    return this.dB.object(`users/${uid}/movements/${year}/${month}/${id}`).set(data);
   }
-  updateMovement(uid: string, id: string, month: Number, data: Movement) {
+  updateMovement(uid: string, id: string, month: Number, year: Number, data: Movement) {
 
-    const itemRef = this.dB.object(`users/${uid}/movements/${month}/${id}`).update(data);
+    const itemRef = this.dB.object(`users/${uid}/movements/${year}/${month}/${id}`).update(data);
     return itemRef;
   }
 
-  deleteMovement(uid: string, month: Number, id: string) {
+  deleteMovement(uid: string, month: Number, year:Number, id: string) {
     
-    return this.dB.object(`users/${uid}/movements/${month}/${id}`).remove()
+    return this.dB.object(`users/${uid}/movements/${year}/${month}/${id}`).remove()
   }
 
   //Categories

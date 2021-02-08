@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="col col-sm-4 col-md-3 text-right align-self-center" style="font-size: 18px;">
-                        <i class="fa fa-edit cursor margin-x6" [routerLink]="['/edit',movement.month,movement.id]"></i>
+                        <i class="fa fa-edit cursor margin-x6" [routerLink]="['/edit',movement.year,movement.month,movement.id]"></i>
                         <i class="fa fa-trash cursor" (click)="deleteMovement(movement)"></i>
                     </div>
 
@@ -122,7 +122,7 @@
                         </span>
                     </div>
                     <div class="col col-sm-4 col-md-3 text-right align-self-center" style="font-size: 18px;">
-                        <i class="fa fa-edit cursor margin-x6" [routerLink]="['/edit',movement.month,movement.id]"></i>
+                        <i class="fa fa-edit cursor margin-x6" [routerLink]="['/edit',movement.year,movement.month,movement.id]"></i>
                         <i class="fa fa-trash cursor" (click)="deleteMovement(movement)"></i>
                     </div>
                 </div>

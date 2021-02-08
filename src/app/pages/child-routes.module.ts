@@ -13,7 +13,7 @@ const childRoutes: Routes = [
   { path: 'home', component: MovementsComponent },
   { path: 'info', component: InfoComponent },
   { path: 'new', component: NewMovementComponent }, 
-  { path: 'edit/:month/:id', component: EditMovementComponent }, 
+  { path: 'edit/:year/:month/:id', component: EditMovementComponent }, 
   
 ]
 

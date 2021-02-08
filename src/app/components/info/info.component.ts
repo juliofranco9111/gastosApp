@@ -25,6 +25,9 @@ export class InfoComponent implements OnInit, OnDestroy {
   public percents = [];
   public categories = [];
 
+  public date = new Date;
+  public year = this.date.getFullYear();
+
   
 
   public info = {
@@ -43,7 +46,8 @@ export class InfoComponent implements OnInit, OnDestroy {
     category: 'Salario',
     id: '',
     month: 0,
-    comment: ''
+    comment: '',
+    year: this.year
   };
 
   public saveMovement: Movement = {
@@ -52,7 +56,8 @@ export class InfoComponent implements OnInit, OnDestroy {
     category: 'Ahorro',
     id: '',
     month: 0,
-    comment: ''
+    comment: '',
+    year: this.year
   };
 
   public loading = true;
@@ -164,12 +169,12 @@ export class InfoComponent implements OnInit, OnDestroy {
               for (let i = month; i <= 11; i++) {
                 if (!this.info.saving) {
                   this.firstMovement.month = i;
-                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
+                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month,this.year, this.firstMovement);
                 } else {
                   this.firstMovement.month = i;
                   this.saveMovement.month = i;
-                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month, this.firstMovement);
-                  this.dB.saveMovement(this.user.uid, this.saveMovement.id, this.saveMovement.month, this.saveMovement);
+                  this.dB.saveMovement(this.user.uid, this.firstMovement.id, this.firstMovement.month,this.year, this.firstMovement);
+                  this.dB.saveMovement(this.user.uid, this.saveMovement.id, this.saveMovement.month,this.year, this.saveMovement);
                 }
               }
 

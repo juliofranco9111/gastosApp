@@ -37,6 +37,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   public changedMonth = false;
 
   public date = new Date;
+  public year = this.date.getFullYear();
+
   public todayMonth = this.date.getMonth();
 
   
@@ -100,7 +102,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   initSubscriptions() {
 
-    this.subscription = this.dB.getMonthsMovements(this.user.uid).subscribe(months => {
+    this.subscription = this.dB.getMonthsMovements(this.user.uid, this.year).subscribe(months => {
       if (months) {
         for (let i = 0; i < months.length; i++) {
           this.newMonths.push(this.months[months[i]]);
@@ -192,7 +194,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
     this.changedMonth = true;
 
-    this.subscription = this.dB.getMovements(this.user.uid, value)
+    this.subscription = this.dB.getMovements(this.user.uid, value, this.year)
       .subscribe((movements: Movement[]) => {
         if (!movements || movements.length === 0) {
           this.data = false;
@@ -212,7 +214,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   getMovements() {
-    return this.dB.getMovements(this.user.uid, this.todayMonth)
+    return this.dB.getMovements(this.user.uid, this.todayMonth, this.year)
   }
 
 
@@ -230,7 +232,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Si, eliminar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.dB.deleteMovement(this.user.uid, month, id)
+        this.dB.deleteMovement(this.user.uid, month, this.year, id)
           .then(() => {
 
             Swal.fire(

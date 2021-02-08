@@ -21,8 +21,8 @@ export class MovementsService {
 
   }
 
-  getMovements(uid: string, month: number) {
-    return this.dB.getMovements(uid, month);
+  getMovements(uid: string, month: Number, year:Number) {
+    return this.dB.getMovements(uid, month, year);
   }
 
   getCategories(uid: string) {

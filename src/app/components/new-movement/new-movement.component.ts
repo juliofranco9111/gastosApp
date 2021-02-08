@@ -34,6 +34,8 @@ export class NewMovementComponent implements OnInit, OnDestroy {
   public category2 = '';
 
   public date = new Date;
+  public year = this.date.getFullYear();
+
   public month = this.date.getMonth();
 
   public categorySubscribe: Subscription;
@@ -101,7 +103,7 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     data.month = this.month;
 
 
-    this.dB.saveMovement(this.user.uid, id, this.month, data)
+    this.dB.saveMovement(this.user.uid, id, this.month,this.year, data)
       .then(() => {
         this.router.navigateByUrl('/home')
       })
