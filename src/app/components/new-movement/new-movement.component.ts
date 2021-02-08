@@ -1,3 +1,4 @@
+import { User } from 'src/app/models/user.model';
 import { Movement } from 'src/app/models/movement.model';
 import { UserService } from 'src/app/services/user.service';
 import { DatabaseService } from './../../services/database.service';
@@ -21,7 +22,10 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     comment: ['',Validators.maxLength(300)]
   })
 
-  public uid: string;
+  public user: User;
+
+  public loading = true;
+
 
   public categoryValidator = false;
 
@@ -40,22 +44,33 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     private dB: DatabaseService,
     private router: Router
   ) { }
+
   ngOnDestroy(): void {
     this.categorySubscribe.unsubscribe();
   }
 
   ngOnInit() {
 
-    this.uid = this.userService.user.uid;
+    const userVerify = setInterval(()=>{
+      if(this.userService.user.uid){
+        this.user = this.userService.user;
+        console.log('hay user', this.user);
+        clearInterval(userVerify);
 
-    this.categorySubscribe = this.dB.getCategories(this.uid).subscribe((res) => {
-
-      if (!res || res === null) {
-        this.categories = [];
-      } else {
-        this.categories = Object.values(res)
+        this.categorySubscribe = this.dB.getCategories(this.user.uid).subscribe((res) => {
+          if (!res || res === null) {
+            this.categories = [];
+          } else {
+            this.categories = Object.values(res)
+          }
+          this.loading = false;
+        }, err => {
+            this.loading = false;
+        });
       }
-    });
+    },200)
+
+    
   }
 
   saveNewMovement() {
@@ -66,7 +81,7 @@ export class NewMovementComponent implements OnInit, OnDestroy {
 
 
     if (category.value === 'otra' || category.value.length < 0) {
-      console.log(category.value);
+      
       if (this.category2.length === 0) {
         this.categoryValidator = true;
         return false;
@@ -75,9 +90,9 @@ export class NewMovementComponent implements OnInit, OnDestroy {
       }
       
     };
-
-    if (!this.categories.includes(category.value)) {      
-      this.dB.saveCategory(category.value, this.uid);
+    
+    if (!this.categories.includes(category.value)) {
+      this.dB.saveCategory(category.value, this.user.uid);
     };
 
     
@@ -86,7 +101,7 @@ export class NewMovementComponent implements OnInit, OnDestroy {
     data.month = this.month;
 
 
-    this.dB.saveMovement(this.uid, id, this.month, data)
+    this.dB.saveMovement(this.user.uid, id, this.month, data)
       .then(() => {
         this.router.navigateByUrl('/home')
       })

@@ -1,90 +1,76 @@
-<div class="login-register mx-auto col-12 col-sm-10 col-md-7 col-xl-5 animated fadeIn" style="top: 30px;">
+<div class="login-register mx-auto col-12 col-sm-10 col-md-7 col-xl-5 animated fadeIn" style="top: 15px;">
     <div class="login-box card mx-auto">
         <div class="card-body">
-            <form class="form-horizontal form-material" 
-            (ngSubmit)="createUser()"
-            id="loginform"
-            autocomplete="off" [formGroup]="registerForm">
+            <form class="form-horizontal form-material" (ngSubmit)="createUser()" id="loginform" autocomplete="off" [formGroup]="registerForm">
 
                 <img src="../../../../assets/images/logo-+-tag-lateral.png" class="img-login-register" alt="">
                 <h2 class="box-title m-b-20 text-center">Registrarse</h2>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control"
-                        type="text" placeholder="Nombre"
-                        formControlName="name"> 
+                        <input class="form-control" type="text" placeholder="Nombre" formControlName="name">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control"
-                        type="text" placeholder="Apellido"
-                        formControlName="lastName"> 
+                        <input class="form-control" type="text" placeholder="Apellido" formControlName="lastName">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control"
-                        type="text"
-                        placeholder="Correo"
-                        formControlName="email"> </div>
+                        <input class="form-control" type="text" placeholder="Correo" formControlName="email"> </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control"
-                        type="password"
-                        placeholder="Contraseña"
-                        formControlName="password"> </div>
+                        <input class="form-control" type="password" placeholder="Contraseña" formControlName="password"> </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control"
-                        #pass2
-                        type="password" 
-                        placeholder="Repite tu contraseña"
-                        formControlName="password2"> </div>
+                        <input class="form-control" #pass2 type="password" placeholder="Repite tu contraseña" formControlName="password2"> </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-md-12 ml-3">
                         <div class="checkbox checkbox-info pull-left p-t-0">
-                            <input id="checkbox-signup"
-                            type="checkbox"
-                            class="filled-in chk-col-light-blue"
-                            #terms
-                            formControlName="terms">
+                            <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue" #terms formControlName="terms">
                             <label for="checkbox-signup"> Acepto que se guarden mis datos personales </label>
-                        </div> 
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col text-danger" >
-                        <p *ngIf="notValidField('name')">* El nombre es obligatorio</p>
-                        <p *ngIf="notValidField('email')">* El e-mail es obligatorio y debe ser válido</p>
-                        <p *ngIf="noValidPasswords()">* Las contraseñas no son iguales</p>
-                        <p *ngIf="agreeTerms()">* Debe aceptar los términos de uso</p>
+                    <div class="col text-danger">
+                        <p *ngIf="notValidField('name') && !googleButton">* El nombre es obligatorio</p>
+                        <p *ngIf="notValidField('email') && !googleButton">* El e-mail es obligatorio y debe ser válido</p>
+                        <p *ngIf="noValidPasswords() && !googleButton">* Las contraseñas no son iguales</p>
+                        <p *ngIf="agreeTerms() && !googleButton">* Debe aceptar los términos de uso</p>
                     </div>
 
                 </div>
+
                 <div class="form-group text-center">
                     <div class="col-xs-12 p-b-20">
-                        <button class="btn btn-block btn-lg btn-info"
-                        [disabled]="registerForm.invalid"
-                         type="submit">Confirmar</button>
+                        <button *ngIf="!confirmButton" class="btn btn-block btn-lg btn-info" [disabled]="registerForm.invalid" type="submit">
+                            Confirmar
+                        </button>
+                        <button *ngIf="confirmButton" class="btn btn-block btn-lg btn-info" [disabled]="registerForm.invalid" type="submit">
+                            <i aria-hidden="true" class="fa fa-spinner fa-spin animated fadeIn"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="col-xs-12 p-b-20">
+                        <button (click)="loginWithGoogle()" class="btn btn-googleplus btn-lg btn-block" data-toggle="tooltip" title="" data-original-title="Login with Google">
+                             <i aria-hidden="true" *ngIf="!googleButton" class="fa fa-google-plus animated fadeIn"></i>
+                             <i aria-hidden="true" *ngIf="googleButton" class="fa fa-spinner fa-spin animated fadeIn"></i>
+                             </button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                        <div class="social col-4 mx-auto">
-                            <a href="javascript:void(0)" class="btn btn-googleplus btn-block" data-toggle="tooltip" title="" data-original-title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a>
-                        </div>
-                    </div>
-              
-                    <div class="col-sm-12 mt-5 text-center">
+                    <div class="col-sm-12 text-center">
                         Ya tengo una cuenta<a routerLink="/login" class="text-info m-l-5"><b>Ingresar</b></a>
                     </div>
                 </div>
+
             </form>
-            
+
         </div>
     </div>
 </div>

@@ -72,14 +72,17 @@ export class EditMovementComponent implements OnInit, OnDestroy {
   initSubscriptions() {
     this.subscription = this.dB.getMovementById(this.uid, this.monthMovement, this.idMovement)
       .subscribe(movement => {
-        this.selectedMovement = movement;
-        const { id, type, category, amount, comment } = this.selectedMovement;
-        this.editMovement.controls['amount'].setValue(amount);
-        this.editMovement.controls['id'].setValue(id);
-        this.editMovement.controls['type'].setValue(type);
-        this.editMovement.controls['category'].setValue(category);
-        this.editMovement.controls['comment'].setValue(comment);
+        if (movement) {
+          this.selectedMovement = movement;
+          const { id, type, category, amount, comment } = this.selectedMovement;
+          this.editMovement.controls['amount'].setValue(amount);
+          this.editMovement.controls['id'].setValue(id);
+          this.editMovement.controls['type'].setValue(type);
+          this.editMovement.controls['category'].setValue(category);
+          this.editMovement.controls['comment'].setValue(comment);
+        }
       });
+
 
     this.subscription = this.dB.getCategories(this.uid).subscribe((res: any) => {
       if (!res || res === null) {

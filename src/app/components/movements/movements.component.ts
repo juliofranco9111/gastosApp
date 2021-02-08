@@ -24,7 +24,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   public totalEarnings = 0;
   public totalExpenses = 0;
-  public balance = 0;
+  public balance: Number;
 
   public loading = true;
   public data = false;
@@ -64,34 +64,47 @@ export class MovementsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private dB: DatabaseService,
     private infoService: InfoService,
-  ) { }
+  ) {
 
-  ngOnDestroy() {
-    
-    this.subscription.unsubscribe();
   }
 
-  ngOnInit() { 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  ngOnInit() {
     const verifyUser = setInterval(() => {
-      
       if (this.userService.user.uid) {
         this.user = this.userService.user;
         this.initSubscriptions();
         clearInterval(verifyUser);
-        
+      } 
+    }, 100);
+
+    let i = 0;
+
+    const verifyInfo = setInterval(() => {
+      i++;
+      console.log(i)
+      if (this.infoService.info) {
+        this.info = true;
+        this.loading = false;
+        clearInterval(verifyInfo);
+      } else if (i === 20) {
+        this.info = false;
+        this.loading = false;
+        clearInterval(verifyInfo);
       }
     }, 100);
 
-    const verifyInfo = setInterval(() => {
-      if (this.infoService.info) {
-        this.info = true;
-        clearInterval(verifyInfo)
-      }
-    },100)
+
+
   }
 
   initSubscriptions() {
-    
+
     this.subscription = this.dB.getMonthsMovements(this.user.uid).subscribe(months => {
       if (months) {
         for (let i = 0; i < months.length; i++) {
@@ -108,18 +121,17 @@ export class MovementsComponent implements OnInit, OnDestroy {
       } else {
         this.movements = movements;
         this.getFilterMovements();
-        this.totals();
         this.data = true;
       }
     }, err => { return false });
 
     
-    this.loading = false;
   }
 
   getFilterMovements() {
     this.expenses = this.movements.filter(movement => movement.type === 'gasto');
     this.earnings = this.movements.filter(movement => movement.type === 'ingreso');
+    this.totals();
   }
 
   totals() {
@@ -133,24 +145,27 @@ export class MovementsComponent implements OnInit, OnDestroy {
     this.expenses.forEach(mov => {
       this.totalExpenses += mov.amount;
     });
+
     this.getBalance();
   }
 
   getBalance() {
 
-    if (this.info) {
-      const percent50 = (((this.movements[0].amount * 50) / 100));
-      const percent20 = (((this.movements[0].amount * 20) / 100));
-      this.balance = this.totalEarnings - this.totalExpenses;
+    this.balance = 0;
 
-      if (this.balance <= percent50 && this.balance > percent20) {
-        this.balanceClass = 'warning'
-      } else if (this.balance <= percent20) {
-        this.balanceClass = 'danger'
-      } else {
-        this.balanceClass = 'success'
-      }
+    const percent50 = (((this.totalEarnings * 50) / 100));
+    const percent20 = (((this.totalEarnings * 20) / 100));
+
+    this.balance = this.totalEarnings - this.totalExpenses;
+
+    if (this.balance <= percent50 && this.balance > percent20) {
+      this.balanceClass = 'warning';
+    } else if (this.balance <= percent20) {
+      this.balanceClass = 'danger';
+    } else {
+      this.balanceClass = 'success';
     }
+
   }
 
   changeMonth(val: string) {
@@ -198,11 +213,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
     Swal.fire({
       title: '¿Esta seguro de eliminar el movimiento?',
-      text: "Ésta acción no se puede revertir",
+      text: "Ésta acción no se puede deshacer",
       icon: 'warning',
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#398bf7',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Si, eliminar'
     }).then((result) => {
@@ -216,7 +231,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
               'success'
             );
           })
-        .catch(err => console.log(err))
+          .catch(err => console.log(err))
       }
       this.totals();
 

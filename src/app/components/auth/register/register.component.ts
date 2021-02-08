@@ -1,17 +1,14 @@
 import { DatabaseService } from './../../../services/database.service';
 import { UserService } from './../../../services/user.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import Swal from 'sweetalert2';
-
 import { AuthService } from './../../../services/auth.service';
-import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
+
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-
-
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -20,7 +17,7 @@ import { Subscription } from 'rxjs';
   styles: [
   ]
 })
-export class RegisterComponent implements OnDestroy{
+export class RegisterComponent implements OnDestroy {
 
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -33,7 +30,7 @@ export class RegisterComponent implements OnDestroy{
     validators: this.samePasswords('password', 'password2')
   });
 
-  public userSubscripction: Subscription;
+  public userSubscription: Subscription;
 
   public formSubmitted = false;
 
@@ -46,6 +43,9 @@ export class RegisterComponent implements OnDestroy{
     google: false
   };
 
+  public googleButton = false;
+  public confirmButton = false;
+
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
@@ -56,8 +56,8 @@ export class RegisterComponent implements OnDestroy{
 
 
   ngOnDestroy(): void {
-    if (this.userSubscripction) {
-      this.userSubscripction.unsubscribe();
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -123,36 +123,77 @@ export class RegisterComponent implements OnDestroy{
       // console.log('no valid');
       return;
     } else {
+      this.confirmButton = true;
 
       this.authService.registerUser(value.email, value.password)
         .then(data => {
-          console.log('creado');
-          // console.log(data);
           this.user.uid = data.user['uid'];
-
           this.userService.reloadUser();
 
-          this.userSubscripction = this.dB.saveUser(this.user)
-            .subscribe((user:any )=> {
-              // console.log(user);
+          this.userSubscription = this.dB.saveUser(this.user)
+            .subscribe((user: User) => {
+              this.userSubscription = this.dB.getCategories(user.uid).subscribe(categories => {
+                if (!categories) {
+                  const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
+                  categoriesUser.forEach(category => {
+                    this.dB.saveCategory(category, user.uid)
+                  });
+                }
+              }, err => false);
+            }, err => false);
 
-            }, err => console.log(err) )
-          
-          this.router.navigateByUrl('/home')
-        }
-        )
-        .catch(err => {
-
-          Swal.fire('Error', err.message, 'error');
+          this.router.navigateByUrl('/home');
 
         })
+        .catch(err => {
+          this.confirmButton = false;
+          Swal.fire('Error', err.message, 'error');
+        });
     }
   }
 
 
+  loginWithGoogle() {
+
+    this.googleButton = true;
+
+    this.authService.loginWithGoogle()
+      .then((user: any) => {
 
 
+        const { uid, email, displayName } = user.user;
 
+        const userGoogle: User = {
+          uid,
+          email,
+          displayName,
+          agree: true,
+          role: 'USER',
+          google: true
+        };
 
+        this.userService.reloadUser();
 
+        this.userSubscription = this.dB.saveUser(userGoogle)
+          .subscribe(user => {
+            this.userSubscription = this.dB.getCategories(user.uid).subscribe(categories => {
+              if (!categories) {
+                const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
+                categoriesUser.forEach(category => {
+                  this.dB.saveCategory(category, user.uid)
+                });
+              }
+            }, err => false);
+
+            this.dB.lastLogin(uid).then(data => {
+              this.router.navigateByUrl('/home');
+            });
+          }, err => false)
+
+      })
+      .catch(err => {
+        console.error(err);
+        this.googleButton = false;
+      })
+  }
 }

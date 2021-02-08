@@ -17,6 +17,7 @@ export class UserCardComponent implements OnInit {
   public email = '';
 
   public edit = false;
+  public loadButton = false;
   public disabled = true;
   
   constructor(
@@ -34,6 +35,7 @@ export class UserCardComponent implements OnInit {
 
 
   saveInfo() {
+    this.loadButton = true;
     this.userService.UpdateProfileName(this.name)
       .then(() => {
         this.dB.updateName(this.user.uid, this.name)
@@ -60,6 +62,7 @@ export class UserCardComponent implements OnInit {
         this.email = this.user.email;
       });
 
+    this.loadButton = false;
     this.edit = false;
     this.disabled = true;
 

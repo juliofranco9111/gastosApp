@@ -31,7 +31,10 @@
 
     <div class="col col-md-12 mt-2">
         <button *ngIf="!edit" type="submit" (click)="editInfo()" class="animated fadeIn btn btn-secondary round-button text-gray"><i class="fa fa-pencil fa-2x"></i></button>
-        <button *ngIf="edit" type="submit" (click)="saveInfo()" class="animated fadeIn btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+        <button *ngIf="edit" type="submit" (click)="saveInfo()" class="animated fadeIn btn btn-success round-button text-white">
+            <i *ngIf="!loadButton"class="fa fa-save fa-2x"></i>
+            <i *ngIf="loadButton" class="fa fa-spinner fa-spin fa-2x"></i>
+        </button>
     </div>
 
 </div>

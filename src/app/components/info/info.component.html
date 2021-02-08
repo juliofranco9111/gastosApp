@@ -14,21 +14,21 @@
                     <tbody>
 
                         <tr>
-                            <td>Simbolo de moneda preferido</td>
+                            <td>Símbolo de moneda preferido</td>
                             <td>
                                 <input class="form-control form-material col-8 mx-auto" autocomplete="off" [(ngModel)]="info.symbol" type="text" name="symbol" id="">
                             </td>
                         </tr>
 
                         <tr>
-                            <td>¿Cuanto cobras?</td>
+                            <td>¿Cuánto cobras?</td>
                             <td>
                                 <input class="form-control col-8 mx-auto" [(ngModel)]="info.salary" autocomplete="off" type="number" name="monto" id="">
                             </td>
                         </tr>
 
                         <tr>
-                            <td> ¿Ahorrás?</td>
+                            <td>Quiero ahorrar</td>
                             <td>
                                 <div class="checkbox checkbox-success">
                                     <input [(ngModel)]="info.saving" name="saving" id="checkbox1" type="checkbox">
@@ -75,7 +75,10 @@
         <div class="row mx-auto text-center stick-button" style="top: -45px; position: relative;">
 
             <div class="col col-md-12 mt-2">
-                <button type="submit" (click)="saveInfo()" class="btn btn-success round-button text-white"><i class="fa fa-save fa-2x"></i></button>
+                <button type="submit" (click)="saveInfo()" class="btn btn-success round-button text-white">
+                    <i *ngIf="!buttonLoad" class="fa fa-save fa-2x"></i>
+                    <i *ngIf="buttonLoad" class="fa fa-spinner fa-spin fa-2x"></i>
+                </button>
             </div>
 
         </div>

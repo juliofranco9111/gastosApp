@@ -8,17 +8,17 @@ import { Injectable } from '@angular/core';
 export class InfoService {
 
 
-  public info:any;
+  public info: any;
   public symbol: string;
 
   public uid = '';
-  
+
 
   constructor(
     private dB: DatabaseService,
     private userService: UserService
-  ) {     
-    const verifyUser = setInterval(() => {
+  ) {
+    const verifyInfo = setInterval(() => {
       if (this.userService.user.uid) {
         this.uid = this.userService.user.uid;
         this.dB.getInfo(this.uid).subscribe((info: any) => {
@@ -26,19 +26,18 @@ export class InfoService {
           if (info) {
             this.info = info;
             this.symbol = this.info.symbol;
-          }
-        }, err => { return false });    
-        
-        clearInterval(verifyUser);        
-      }
-    },200)
-    }
-    
-    
-    
+            clearInterval(verifyInfo);
+          };
+        }, err => { return false });
+      };
+    }, 100);
+  }
+
+
+
 }
- 
-  
+
+
 
 
 

@@ -1,4 +1,4 @@
-<div class="login-register mx-auto col-12 col-sm-10 col-md-7 col-xl-5 animated fadeIn" style="top: 30px;">
+<div class="login-register mx-auto col-12 col-sm-10 col-md-7 col-xl-5 animated fadeIn" style="top: 15px;">
     <div class="login-box card">
         <div class="card-body">
             <form [formGroup]="loginForm" (ngSubmit)="logInWithEmailAndPassword()" class="form-horizontal form-material" id="loginform" action="index.html">
@@ -31,17 +31,23 @@
 
                 <div class="form-group text-center">
                     <div class="col-xs-12 p-b-20">
-                        <button [disabled]="loginForm.invalid" class="btn btn-block btn-lg btn-info" type="submit">Ingresar</button>
+                        <button *ngIf="!confirmButton" [disabled]="loginForm.invalid" class="btn btn-block btn-lg btn-info" type="submit">
+                            Ingresar
+                        </button>
+                        <button *ngIf="confirmButton" class="btn btn-block btn-lg btn-info" [disabled]="registerForm.invalid" type="submit">
+                            <i aria-hidden="true" class="fa fa-spinner fa-spin animated fadeIn"></i>
+                        </button>
                     </div>
 
                     <div class="col-xs-12 p-b-20">
                         <button type="button" (click)="loginWithGoogle()" class="btn btn-googleplus btn-lg btn-block" data-toggle="tooltip" title="" data-original-title="Login with Google">
-                            <i aria-hidden="true" class="fa fa-google-plus"></i>
+                            <i aria-hidden="true" *ngIf="!googleButton" class="fa fa-google-plus animated fadeIn"></i>
+                            <i aria-hidden="true" *ngIf="googleButton" class="fa fa-spinner fa-spin animated fadeIn"></i>
                         </button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 mt-5 text-center">
+                    <div class="col-sm-12 text-center">
                         No tengo una cuenta<a routerLink="/register" class="text-info m-l-5"><b>Registrarse</b></a>
                     </div>
                 </div>

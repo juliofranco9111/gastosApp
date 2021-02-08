@@ -31,7 +31,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   public remember = true;
 
   public emailUser: string;
-
+  
+  public confirmButton = false;
+  public googleButton = false;
 
 
 
@@ -60,6 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   logInWithEmailAndPassword() {
 
+    this.confirmButton = true;
     this.formSubmitted = true;
 
     const email = this.loginForm.value.email;
@@ -75,19 +78,18 @@ export class LoginComponent implements OnInit, OnDestroy {
       .then((data: any) => {
         this.userService.reloadUser();
         this.dB.lastLogin(data.user.uid).then(() => {
-
             this.router.navigateByUrl('/home');
-         
-
-
         })
       })
       .catch(err => {
+        this.confirmButton = false;
         Swal.fire('Error', err.message, 'error');
       })
   }
 
   loginWithGoogle() {
+
+    this.googleButton = true;
     
     this.authService.loginWithGoogle()
       .then((user: any) => {
@@ -108,17 +110,26 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.subscription = this.dB.saveUser(userGoogle)
           .subscribe(user => {
-
-            
+            this.subscription = this.dB.getCategories(user.uid).subscribe(categories => {
+              if (!categories) {
+                const categoriesUser = ["Alquiler", "Transporte", "Servicios", "Comida", "Ocio", "Ropa"];
+                categoriesUser.forEach(category => {
+                  this.dB.saveCategory(category, user.uid)
+                });
+              }
+            }, err => false);
 
             this.dB.lastLogin(uid).then(data => {
               this.router.navigateByUrl('/home');
             });
           }
-            , err => console.error(err))
+            , err => false)
 
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err);
+        this.googleButton = false;
+      })
   }
 
 

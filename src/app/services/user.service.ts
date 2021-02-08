@@ -57,7 +57,6 @@ export class UserService {
 
         this.dB.returnUserById(uid).subscribe(async user => {
           if (!displayName) {
-            console.log('display');
             displayName = user.displayName;
             this.UpdateProfileName(displayName).then(() => true)
           }  

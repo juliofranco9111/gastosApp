@@ -85,9 +85,53 @@ body {
     margin-top: 20px
 }
 
+.image-help {
+    display: block;
+    width: 100%
+}
+
+#help-list {
+    list-style: none;
+    font-size: 20px;
+    padding-inline-start: 0px !important;
+}
+
+.font-size-30 {
+    font-size: 30;
+}
+
+.font-size-20 {
+    font-size: 20;
+}
+
+#tip-bulb {
+    transition: all 500ms;
+    animation: tip 1500ms;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes tip {
+    0% {
+        color: #455a64;
+    }
+    50% {
+        color: #455a64c2;
+    }
+    100% {
+        color: #455a64;
+    }
+}
+
 @media (min-width: 991px) {
     .icon-bar {
         border-top: none;
         margin-top: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    #help-list {
+        font-size: 15px;
     }
 }

@@ -1,44 +1,51 @@
 <app-loading *ngIf="loading" class="animated fadeIn"></app-loading>
 <div class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 mb-3 animated fadeIn">
 
-    <div *ngIf="!loading && data">
+    <div *ngIf="!loading && !info" class="card mx-auto mb-3 bg-light-warning col animated fadeIn">
+        <div class="card-body text-center">
+            <h3>
+                Tocá: <i class="fa fa-user"></i> En la barra superior para cargar tu información financiera...
+            </h3>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !info && !data" class="card mx-auto col animated fadeIn mt-2 bg-light-info">
+        <div class="card-body text-center">
+            <div class="row">
+                <div class="col-11 align-self-center">
+                    <h3>
+                        Tocá: <i class="fa fa-question-circle"></i> En la barra superior para ir a la guía de uso...
+                    </h3>
+                </div>
+                <div class="col-1">
+                    <span style="font-size: 40px;">
+                        <i id="tip-bulb" class="fa fa-lightbulb-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && data" class="animated fadeIn">
         <select *ngIf="todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted col-10">
-
             <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i" value="{{i}}">{{ month }}
-            </option>
-
-            
+            </option>            
         </select>
-
         <select *ngIf="!todayMonth == 0" (change)="changeMonth($event.target.value)" class="form-control btn-muted">
-
             <option *ngFor="let month of newMonths; let i = index" [selected]="todayMonth == i+1" value="{{i}}">{{ month }}
-            </option>
-
-            
+            </option>            
         </select>
-
         <div *ngIf="changedMonth" class="container animated fadeIn mt-5">
             <app-loading></app-loading>
         </div>
     </div>
 
-    <div *ngIf="!loading && !data" class="alert alert-info text-center animated fadeIn mt-4">
-        <h1>
-            No hay movimientos aún...
-        </h1>
-    </div>
-</div>
-
-<div *ngIf="!loading && !info && !data" class="card mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
-    <div class="card-body text-center">
-        <h3>
-            Tocá aquí:
-            <a routerLink="/info" class="cursor text-secondary">
-                <i class="fa fa-user"></i>
-            </a>
-            para cargar tu información financiera...
-        </h3>
+    <div *ngIf="!loading && !data" class="card text-center animated fadeIn mt-4">
+        <div class="card-body">
+            <h3>
+                No hay movimientos aún...
+            </h3>
+        </div>
     </div>
 </div>
 
@@ -55,7 +62,7 @@
     </a>
 </div>
 
-<div *ngIf="!loading && data && info" class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
+<div *ngIf="!loading && data" class="mx-auto col-12 col-sm-10 col-md-10 col-xl-7 animated fadeIn">
 
     <div>
         <ul class="list-group">

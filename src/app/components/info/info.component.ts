@@ -16,6 +16,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   public subs: Subscription;
 
   public saved = false;
+  public buttonLoad = false;
 
 
   public dayMonth = [];
@@ -63,20 +64,22 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   }
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
 
     this.daysMonth();
-    
-    const verifyUser = setInterval(() => {      
-      if (this.userService.user.uid){
+
+    const verifyUser = setInterval(() => {
+      if (this.userService.user.uid) {
         this.user = this.userService.user;
         this.initSubscriptions()
         clearInterval(verifyUser)
       }
-      
+
     }, 100);
   }
 
@@ -87,7 +90,7 @@ export class InfoComponent implements OnInit, OnDestroy {
       } else {
         this.info = info;
       }
-    },err => {return false});
+    }, err => { return false });
 
     for (let i = 1; i <= 40; i++) {
       if (i % 5 === 0) {
@@ -100,7 +103,7 @@ export class InfoComponent implements OnInit, OnDestroy {
           this.categories = Object.values(categories);
         }
       }, err => { return false });
-    
+
     this.loading = false;
   }
 
@@ -114,6 +117,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   }
 
   saveInfo() {
+    this.buttonLoad = true;
     if (this.info.salary !== 0) {
 
       const date = new Date;
@@ -121,6 +125,7 @@ export class InfoComponent implements OnInit, OnDestroy {
 
       this.dB.saveInfo(this.user.uid, this.info)
         .then(() => {
+
           Swal.fire(
             {
               title: '¿Querés crear movimientos de salario y ahorro?',
@@ -136,9 +141,7 @@ export class InfoComponent implements OnInit, OnDestroy {
 
             }
           ).then(result => {
-
             if (result.isConfirmed) {
-
               this.firstMovement.amount = this.info.salary;
               this.firstMovement.id = month.toString();
 
@@ -170,8 +173,13 @@ export class InfoComponent implements OnInit, OnDestroy {
                 'Se ha guardado tu información y se crearon movimientos',
                 'success'
               )
-                .then(() => this.router.navigateByUrl('/home'))
-                .catch(err => console.error(err));
+                .then(() => {
+                  this.buttonLoad = false;
+                  this.router.navigateByUrl('/home')
+                })
+                .catch(err => {
+                  this.buttonLoad = false;
+                });
             } else {
               Swal.fire(
                 'Guardado!',
@@ -183,16 +191,15 @@ export class InfoComponent implements OnInit, OnDestroy {
             }
 
           }).catch(rejects => {
+            this.buttonLoad = false;
             return;
           });
 
-
-
-
-
         })
-        .catch(err => console.log(err));
-      
+        .catch(err => {
+          this.buttonLoad = false;
+        });
+
     } else {
       return
     }

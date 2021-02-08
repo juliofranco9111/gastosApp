@@ -1,4 +1,8 @@
-<div class="container">
+<app-loading *ngIf="loading" class="animated fadeIn">
+</app-loading>
+
+
+<div *ngIf="!loading" class="container animated fadeIn">
     <div class="card mt-0">
         <div class="card-body">
             <div class="d-flex mt-0">
