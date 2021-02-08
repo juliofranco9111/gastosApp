@@ -87,7 +87,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
     const verifyInfo = setInterval(() => {
       i++;
-      console.log(i)
       if (this.infoService.info) {
         this.info = true;
         this.loading = false;
