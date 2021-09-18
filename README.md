@@ -1,27 +1,36 @@
-# Gastos
+# Salva - Controlá tus gastos 💰
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
+App creada con Angular para el registro de tus gastos e ingresos
 
-## Development server
+Demo: <https://gastos-app-d4c8f.firebaseapp.com/#/>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Instalación
 
-## Code scaffolding
+Clona el repositorio y en la terminal usa el siguiente comando: 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```terminal
 
-## Build
+npm install
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```
 
-## Running unit tests
+Luego para ejecutar el proyecto en el localhost:4000 usa: 
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```terminal
 
-## Running end-to-end tests
+ng-serve
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
 
-## Further help
+## ¿Que usé?
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+> * Firebase para la autenticación y base de datos
+> * Bootstrap para la UI
+> * Responsive Web Design
+
+
+## Contribuír
+Pull requests son bienvenidas. 👋
+
+## Licencia
+[MIT](https://choosealicense.com/licenses/mit/)
